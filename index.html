@@ -1,73 +1,30 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#171510">
-<meta name="description" content="PIONERO — Viaje por la historia de San Patricio del Chañar.">
-<title>PIONERO — Viaje por la historia de San Patricio del Chañar</title>
-<link rel="stylesheet" href="css/app.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17130e"><meta name="description" content="PIONERO — Viaje por la historia de San Patricio del Chañar.">
+<title>PIONERO · Viaje por la historia de San Patricio del Chañar</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="app" class="app">
-<header class="topbar">
-  <div class="brand"><span class="brand-mark">P</span><div><strong>PIONERO</strong><small>Ocarina Producciones</small></div></div>
-  <div class="top-actions"><span id="progress" class="progress"></span><button id="sourceButton" class="text-button">Fuentes</button></div>
-</header>
-<main id="experience" class="experience" tabindex="-1">
-<section id="welcomeView" class="view view-welcome">
-  <div class="welcome-content">
-    <p class="eyebrow">SAN PATRICIO DEL CHAÑAR · OCARINA PRODUCCIONES</p>
-    <h1>Viajá por el tiempo.</h1>
-    <p class="lead">No vengas a leer una línea de tiempo. Vení a entrar en ella.</p>
-    <p class="intro-copy">Recorré distintas etapas, mirá el territorio, encontrá huellas y descubrí cómo llegamos hasta el Chañar de hoy.</p>
-    <button id="startButton" class="primary-button">Comenzar viaje <span>→</span></button>
-  </div>
-  <div class="welcome-landscape" aria-hidden="true"><i></i><i></i><i></i><span>1973</span></div><div class="welcome-grain" aria-hidden="true"></div>
+<main id="app">
+<header class="top"><div class="brand"><b>P</b><span>PIONERO<small>OCARINA PRODUCCIONES</small></span></div><button id="sources">Fuentes</button></header>
+<section id="home" class="screen home">
+<div class="home-copy"><p class="kicker">SAN PATRICIO DEL CHAÑAR</p><h1>Viajá por el tiempo.</h1><p class="lead">No leas una línea de tiempo. Entrá en el territorio y mirá cómo cambia.</p><button id="start" class="primary">Comenzar viaje <i>→</i></button></div>
+<div class="hero" aria-hidden="true"><div class="sun"></div><div class="ridge"></div><div class="ground"></div><div class="river"></div><div class="grain"></div><span>1973</span></div>
 </section>
-<section id="sceneView" class="view" hidden>
-  <div class="scene-header">
-    <button id="backToJourney" class="icon-button">← <span>Inicio</span></button>
-    <div><p id="sceneDate" class="eyebrow"></p><h2 id="sceneTitle"></h2><p id="sceneHint" class="scene-hint"></p></div>
-    <button id="sourceButtonScene" class="icon-button">Fuentes</button>
-  </div>
-  <div id="scene" class="scene"><div class="scene-world">
-    <div class="scene-sky"></div><div class="scene-atmosphere"></div><div class="scene-vignette"></div><div class="scene-horizon"></div><div class="scene-sun"></div><div class="scene-meseta"></div><div class="scene-barda"></div><div class="scene-monte"></div><div class="scene-hills"></div><div class="scene-ground"></div><div class="scene-relief"></div><div class="scene-water"></div><div class="scene-production"></div><div class="scene-settlement"></div><div class="scene-road"></div>
-    </div><div class="temporal-badge" aria-live="polite"><span id="temporalPhase">VIAJE TEMPORAL</span><b id="temporalLabel">—</b></div>
-    <div class="temporal-controls">
-      <button id="timeBack" class="time-control" aria-label="Viajar al momento anterior">←</button>
-      <div class="time-track"><div id="timeProgress" class="time-progress"></div><div id="timeStops" class="time-stops"></div></div>
-      <button id="timeForward" class="time-control" aria-label="Viajar al momento siguiente">→</button>
-    </div>
-    <div class="scene-mode"><span>RECONSTRUCCIÓN VISUAL ESQUEMÁTICA</span><span id="temporalIndex">01 / 07</span></div>
-    <div class="scene-object object-a"></div><div class="scene-object object-b"></div>
-    <div id="memoryPoints" class="memory-points"></div>
-    <div class="scene-caption"><span id="scenePlace"></span><span id="sceneStatus"></span></div><div class="scene-time-mark" aria-hidden="true">PIONERO</div>
-  </div>
-  <div class="scene-navigation">
-    <button id="previousEra" class="secondary-button">← Anterior</button>
-    <button id="discoverButton" class="primary-button">Descubrir <span>→</span></button>
-    <button id="nextEra" class="secondary-button">Siguiente →</button>
-  </div>
-  <div id="territoryPanel" class="territory-panel" hidden>
-    <div class="territory-head"><div><p class="eyebrow">MOTOR TERRITORIAL</p><h3>¿Dónde estamos?</h3><p id="territoryDescription"></p></div><button id="closeTerritory" class="secondary-button">Cerrar</button></div>
-    <div id="territoryMap" class="territory-map" role="img" aria-label="Esquema territorial interactivo"></div>
-    <div id="territoryLegend" class="territory-legend"></div>
-    <div id="territoryInfo" class="territory-info"></div>
-  </div>
-  <div id="discoveryPanel" class="panel" hidden></div>
+<section id="journey" class="screen journey" hidden>
+<div class="journey-head"><button id="homeBtn">← Inicio</button><div><p id="year" class="kicker"></p><h2 id="title"></h2><p id="hint"></p></div><button id="source2">Fuentes</button></div>
+<div id="world" class="world" tabindex="0" aria-label="Paisaje histórico interactivo">
+<div class="sky"></div><div class="land"></div><div class="barda"></div><div class="brush"></div><div class="water"></div><div class="fields"></div><div class="town"></div><div class="roads"></div><div id="points"></div>
+<div class="stamp"><span id="phase"></span><strong id="status"></strong></div>
+</div>
+<div class="controls"><button id="prev">←</button><div><span id="counter"></span><div class="line"><i id="progress"></i></div></div><button id="next">→</button></div>
+<p class="instruction">Elegí una huella del paisaje o avanzá en el tiempo.</p>
+<div id="discovery" class="discovery" hidden></div>
 </section>
 </main>
-<div id="modal" class="modal" hidden>
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <button id="closeModal" class="modal-close" aria-label="Cerrar">×</button>
-    <p class="eyebrow">PIONERO · FUENTES</p><h2 id="modalTitle">Historia con evidencia.</h2>
-    <div id="sourceContent"></div>
-  </div>
-</div>
-<footer class="footer">PIONERO · San Patricio del Chañar · Ocarina Producciones</footer>
-</div>
-<script src="js/core/runtime.js?v=0.4.2"></script>
-<script type="module" src="js/app.js?v=0.4.2"></script>
-</body>
-</html>
+<dialog id="modal"><button id="close">×</button><p class="kicker">PIONERO · FUENTES</p><h2>Historia con evidencia.</h2><div id="sourceList"></div></dialog>
+<footer>PIONERO · San Patricio del Chañar · Ocarina Producciones</footer>
+<script src="app.js"></script>
+</body></html>
