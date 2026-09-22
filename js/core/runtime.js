@@ -1,38 +1,83 @@
 (function(){
-  const started=Date.now();
-  let recoveryShown=false;
-
-  function escapeHtml(value){
-    return String(value||"Error desconocido").replace(/[<>&]/g,char=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[char]));
+  function esc(value){
+    return String(value ?? "Error desconocido").replace(/[&<>"]/g, function(char){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char];
+    });
   }
 
-  function showRecovery(title,detail){
-    if(recoveryShown)return;
+  var recoveryShown=false;
+
+  function showRecovery(detail){
+    if(recoveryShown || !document.body)return;
     recoveryShown=true;
-    const box=document.getElementById("runtimeGuard")||document.createElement("div");
+
+    var box=document.getElementById("runtimeGuard") || document.createElement("div");
     box.id="runtimeGuard";
     box.setAttribute("role","alert");
     box.style.cssText="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:#171510;color:#f1eadb;font-family:Arial,sans-serif";
-    box.innerHTML="<div style="max-width:620px"><div style="font-size:11px;letter-spacing:.16em;opacity:.7;margin-bottom:14px">PIONERO · SISTEMA DE RECUPERACIÓN</div><h1 style="font:500 42px Georgia,serif;margin:0 0 14px">El viaje necesita reiniciarse.</h1><p style="line-height:1.6;opacity:.8">PIONERO detectó un problema durante la carga. Primero podés intentar nuevamente. Si el problema persiste, reiniciá los datos locales del viaje.</p><details style="margin-top:18px;opacity:.55"><summary>Diagnóstico técnico</summary><pre style="white-space:pre-wrap;line-height:1.4">"+escapeHtml(detail)+"</pre></details><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><button id="runtimeRetry" style="padding:13px 18px;border:1px solid #f1eadb;background:#f1eadb;color:#171510;border-radius:999px;cursor:pointer">Reintentar</button><button id="runtimeReset" style="padding:13px 18px;border:1px solid rgba(241,234,219,.5);background:transparent;color:#f1eadb;border-radius:999px;cursor:pointer">Reiniciar datos del viaje</button></div></div>";
-    if(!box.parentNode)document.body.appendChild(box);
-    box.querySelector("#runtimeRetry").onclick=()=>location.reload();
-    box.querySelector("#runtimeReset").onclick=()=>{
+
+    var wrap=document.createElement("div");
+    wrap.style.cssText="max-width:620px";
+
+    var label=document.createElement("div");
+    label.style.cssText="font-size:11px;letter-spacing:.16em;opacity:.7;margin-bottom:14px";
+    label.textContent="PIONERO · SISTEMA DE RECUPERACIÓN";
+
+    var title=document.createElement("h1");
+    title.style.cssText="font:500 42px Georgia,serif;margin:0 0 14px";
+    title.textContent="El viaje necesita reiniciarse.";
+
+    var message=document.createElement("p");
+    message.style.cssText="line-height:1.6;opacity:.8";
+    message.textContent="PIONERO detectó un problema durante la carga. Primero podés intentar nuevamente. Si el problema persiste, reiniciá los datos locales del viaje.";
+
+    var details=document.createElement("details");
+    details.style.cssText="margin-top:18px;opacity:.55";
+    var summary=document.createElement("summary");
+    summary.textContent="Diagnóstico técnico";
+    var pre=document.createElement("pre");
+    pre.style.cssText="white-space:pre-wrap;line-height:1.4";
+    pre.textContent=esc(detail);
+    details.append(summary,pre);
+
+    var actions=document.createElement("div");
+    actions.style.cssText="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px";
+
+    var retry=document.createElement("button");
+    retry.type="button";
+    retry.textContent="Reintentar";
+    retry.style.cssText="padding:13px 18px;border:1px solid #f1eadb;background:#f1eadb;color:#171510;border-radius:999px;cursor:pointer";
+    retry.onclick=function(){location.reload()};
+
+    var reset=document.createElement("button");
+    reset.type="button";
+    reset.textContent="Reiniciar datos del viaje";
+    reset.style.cssText="padding:13px 18px;border:1px solid rgba(241,234,219,.5);background:transparent;color:#f1eadb;border-radius:999px;cursor:pointer";
+    reset.onclick=function(){
       try{
-        Object.keys(localStorage).filter(key=>key.startsWith("pionero.")).forEach(key=>localStorage.removeItem(key));
+        Object.keys(localStorage).filter(function(key){return key.indexOf("pionero.")===0;}).forEach(function(key){localStorage.removeItem(key);});
       }catch(error){}
       location.reload();
     };
-    box.querySelector("#runtimeRetry").focus();
+
+    actions.append(retry,reset);
+    wrap.append(label,title,message,details,actions);
+    box.replaceChildren(wrap);
+    if(!box.parentNode)document.body.appendChild(box);
+    retry.focus();
   }
 
-  window.addEventListener("error",event=>{
-    if(event?.message)showRecovery("runtime",event.message);
+  window.addEventListener("error",function(event){
+    if(event && event.message)showRecovery(event.message);
   });
-  window.addEventListener("unhandledrejection",event=>{
-    showRecovery("promise",event?.reason?.message||event?.reason||"Promesa rechazada");
+
+  window.addEventListener("unhandledrejection",function(event){
+    var reason=event && event.reason;
+    showRecovery(reason && reason.message ? reason.message : reason || "Promesa rechazada");
   });
-  window.setTimeout(()=>{
-    if(window.PIONERO?.ready)return;
-    showRecovery("startup","La interfaz no informó que terminó de inicializarse dentro del tiempo esperado.");
+
+  window.setTimeout(function(){
+    if(window.PIONERO && window.PIONERO.ready)return;
+    showRecovery("La interfaz no informó que terminó de inicializarse dentro del tiempo esperado.");
   },12000);
 })();
