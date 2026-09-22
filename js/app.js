@@ -10,6 +10,10 @@ import {getTemporalState} from "./experience/temporal.js";
 import {createTemporalTransition} from "./experience/transition.js";
 import {createExperienceCamera} from "./experience/camera.js";
 import {createTemporalRenderer} from "./experience/renderer.js";
+import {createExperienceWorld} from "./experience/world.js";
+import {createSamePlaceEngine} from "./experience/samePlace.js";
+import {createComparisonEngine} from "./experience/comparison.js";
+import {createFocusController} from "./experience/focus.js";
 import {createExperienceState} from "./core/state.js";
 import {createSmokeSuite} from "./core/smoke.js";
 
@@ -21,8 +25,13 @@ const territory=createTerritoryQueries(TERRITORY);
 const validation=validateHistory(HISTORY);
 const state=createExperienceState({eras:HISTORY.eras,content:CONTENT});
 const temporalTransition=createTemporalTransition({duration:820});
-const experienceCamera=createExperienceCamera();
+const experienceCamera=createExperienceCamera({state});
 const temporalRenderer=createTemporalRenderer($(".scene"));
+const world=createExperienceWorld({history,content:CONTENT,territory,temporalRenderer,camera:experienceCamera});
+const samePlace=createSamePlaceEngine({history,territory,camera:experienceCamera});
+const comparison=createComparisonEngine({samePlace});
+const focus=createFocusController({camera:experienceCamera});
+samePlace.register("chanar",{title:"San Patricio del Chañar",nodeIds:["territory-chanar"],description:"Ancla conceptual para observar el mismo territorio en distintos momentos."});
 const kindLabel={documented:"DOCUMENTADO",testimony:"TESTIMONIO",reconstruction:"RECONSTRUCCIÓN",interpretation:"INTERPRETACIÓN"};
 const statusLabel={verified:"VERIFICADO",partial:"PARCIAL",pending:"PENDIENTE"};
 
@@ -59,7 +68,7 @@ function renderTemporalUI(eraId){
   $("#timeProgress").style.width=((index/(Math.max(1,eras.length-1)))*100)+"%";
   $("#timeStops").innerHTML=eras.map((item,i)=>'<button class="time-stop '+(item.id===eraId?"is-active":"")+'" data-era="'+esc(item.id)+'" data-label="'+esc(item.label)+'" aria-label="Viajar a '+esc(item.label)+'" aria-current="'+(item.id===eraId?"step":"false")+'"></button>').join("");
   $("#timeStops").querySelectorAll("[data-era]").forEach(button=>button.onclick=()=>travel(button.dataset.era));
-  temporalRenderer.render(eraId);
+  temporalRenderer.render(eraId,null,experienceCamera.read());
 }
 function travel(id){
   const previous=state.read().eraId;
@@ -115,6 +124,8 @@ function renderEntity(entity){
 function discover(pointId){
   const era=currentEra(),point=(CONTENT.points[era?.id]||[]).find(item=>item.id===pointId);if(!era||!point)return;
   state.visit(era.id,point.id);
+  if(Number.isFinite(point.x)&&Number.isFinite(point.y))focus.focus(point.x,point.y,1);
+  temporalRenderer.render(era.id,null,experienceCamera.read());
   const resolved=resolveEntity(point),panel=$("#discoveryPanel");
   panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir explorando</button>';
   state.openPanel("discovery");$("#closeDiscovery").onclick=()=>state.closePanel();renderPoints();panel.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -182,7 +193,7 @@ const smokeSuite=createSmokeSuite({history,territory,territoryData:TERRITORY,val
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
 state.subscribe(snapshot=>{renderView();renderPanels();if(snapshot.view==="scene"&&snapshot.eraId){renderTimeline(snapshot.eraId);renderPoints();}});
-window.PIONERO={history,queries,territory,validation,audit,state,smoke:smokeSuite,camera:experienceCamera,temporal:getTemporalState,version:"0.4.1",ready:false};
+window.PIONERO={history,queries,territory,validation,audit,state,smoke:smokeSuite,camera:experienceCamera,focus,samePlace,comparison,world,temporal:getTemporalState,version:"0.4.1",ready:false};
 renderEras();renderView();renderPanels();
 if(state.read().eraId){renderTemporalUI(state.read().eraId);temporalRenderer.render(state.read().eraId);}
 window.PIONERO.ready=true;
