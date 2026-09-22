@@ -1,6 +1,6 @@
 import {ENTITY_REQUIRED_FIELDS,EVIDENCE_TYPES,RESEARCH_STATUSES,ENTITY_TYPES,RELATION_TYPES} from "./schema.js";
 
-const collectionName=type=>type==="era"?"eras":type==="media"?"media":type+"s";
+const collectionName=type=>type==="era"?"eras":type==="person"?"people":type==="media"?"media":type==="source"?"sources":type+"s";
 
 export function validateHistory(model){
   const issues=[];
@@ -18,7 +18,7 @@ export function validateHistory(model){
       if(item.id&&entityIds.has(item.id))issues.push({level:"error",type,id:item.id,message:"id duplicado entre tipos de entidad"});
       else if(item.id){entityIds.add(item.id);globalIds.set(type+":"+item.id,type);}
       for(const field of required)if(item[field]===undefined||item[field]===null||item[field]==="")issues.push({level:"error",type,id:item.id,message:"campo obligatorio ausente: "+field});
-      if(type!=="era"&&type!=="media"&&!EVIDENCE_TYPES.includes(item.evidence))issues.push({level:"error",type,id:item.id,message:"evidence inválido"});
+      if(!["era","media","source"].includes(type)&&!EVIDENCE_TYPES.includes(item.evidence))issues.push({level:"error",type,id:item.id,message:"evidence inválido"});
       if(!RESEARCH_STATUSES.includes(item.status))issues.push({level:"error",type,id:item.id,message:"status de investigación inválido"});
       for(const sourceId of item.sourceIds||[])if(!model.sources?.some(source=>source.id===sourceId))issues.push({level:"error",type,id:item.id,message:"fuente inexistente: "+sourceId});
       for(const mediaId of item.mediaIds||[])if(!model.media?.some(media=>media.id===mediaId))issues.push({level:"error",type,id:item.id,message:"media inexistente: "+mediaId});
