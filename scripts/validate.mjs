@@ -9,6 +9,11 @@ import {createTerritoryQueries} from "../js/territory/queries.js";
 import {auditPionero} from "../js/core/audit.js";
 import {createExperienceState} from "../js/core/state.js";
 import {createSmokeSuite} from "../js/core/smoke.js";
+import {createExperienceCamera} from "../js/experience/camera.js";
+import {createTemporalRenderer} from "../js/experience/renderer.js";
+import {createExperienceWorld} from "../js/experience/world.js";
+import {createSamePlaceEngine} from "../js/experience/samePlace.js";
+import {createComparisonEngine} from "../js/experience/comparison.js";
 
 const store=new Map();
 globalThis.localStorage={
@@ -32,5 +37,32 @@ assert.equal(queries.eventsByEra("1973").length,1);
 assert.equal(territory.summaryForEra("1973").nodes.length,3);
 assert.equal(CONTENT.project.version,HISTORY.version);
 assert.equal(HISTORY.version,TERRITORY.version);
+
+const camera=createExperienceCamera();
+assert.deepEqual(camera.read(),{zoom:1,focusX:50,focusY:50,angle:0});
+camera.focus(42,58,1.2);
+assert.deepEqual(camera.read(),{zoom:1.2,focusX:42,focusY:58,angle:0});
+
+const scene={
+  dataset:{},
+  style:{setProperty:(key,value)=>{scene.styles[key]=value;}},
+  styles:{}
+};
+const renderer=createTemporalRenderer(scene);
+const world=createExperienceWorld({history,content:CONTENT,territory,temporalRenderer:renderer,camera});
+assert.equal(world.eraIndex("1973"),3);
+assert.equal(world.adjacent("1973",1),"1974");
+assert.equal(world.snapshot("1973").era.id,"1973");
+
+const samePlace=createSamePlaceEngine({history,territory,camera});
+assert.equal(samePlace.register("chanar",{title:"San Patricio del Chañar",nodeIds:["territory-chanar"]}),true);
+assert.equal(samePlace.findForEra("1973").length,1);
+assert.equal(samePlace.focus("chanar","1973").node.id,"territory-chanar");
+
+const comparison=createComparisonEngine({samePlace});
+assert.equal(comparison.prepare({anchorId:"chanar",fromEraId:"1973",toEraId:"present",mode:"fade"}).status,"ready");
+assert.equal(comparison.prepare({anchorId:"chanar",fromEraId:"1973",toEraId:"present",mode:"invalid"}),null);
+
+console.log("PIONERO EXPERIENCE CORE OK");
 
 console.log("PIONERO CI OK",JSON.stringify({version:HISTORY.version,eras:HISTORY.eras.length,points:smoke.summary.points}));
