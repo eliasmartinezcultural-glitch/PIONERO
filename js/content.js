@@ -1,5 +1,5 @@
 export const CONTENT={
-  project:{version:"0.4.0",title:"PIONERO",subtitle:"Viaje por la historia de San Patricio del Chañar"},
+  project:{version:"0.4.1",title:"PIONERO",subtitle:"Viaje por la historia de San Patricio del Chañar"},
   scenes:{
     "before-1973":{theme:"origin",description:"Una puerta de entrada al territorio y a sus antecedentes."},
     "1968":{theme:"origin",description:"Una etapa productiva comienza a transformar el área del Chañar."},
