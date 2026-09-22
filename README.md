@@ -12,24 +12,32 @@ No se trabaja con parches aislados, remiendos, duplicaciones ni regresiones. Cad
 
 ### ESTADO
 
-**V0.3.1 — MOTOR HISTÓRICO + NAVEGACIÓN TEMPORAL**
+**V0.4.0 — MOTOR HISTÓRICO + MOTOR TERRITORIAL**
 
-El motor histórico de PIONERO ahora se refleja directamente en la experiencia mediante:
+PIONERO ahora conecta dos dimensiones de la historia:
 
-- línea temporal navegable;
-- navegación anterior/siguiente entre eras;
-- fichas genéricas de entidades;
-- relaciones históricas visibles;
-- panel de fuentes dinámico;
-- cola interna de investigación para registros parciales/pendientes;
-- arquitectura inicial de medios preparada para crecer;
-- progreso de descubrimientos calculado desde el contenido real.
+**CUÁNDO → DÓNDE**
 
-### ARQUITECTURA
+La experiencia incorpora una capa territorial esquemática derivada de un modelo independiente. Permite explorar, según la época, relaciones entre localidad, río y área productiva.
 
-EXPERIENCE · TIME ENGINE · HISTORY ENGINE · TERRITORY ENGINE · MEDIA ENGINE · SOURCES ENGINE · EDUCATION ENGINE · CORE
+### MOTOR TERRITORIAL
 
-La historia vive en `js/history/model.js`. La presentación vive en `js/content.js`. La interfaz no debe convertirse en una segunda base de datos.
+Archivos:
+
+- `js/territory/model.js`
+- `js/territory/queries.js`
+
+La representación actual es deliberadamente **esquemática y no está a escala**. No debe interpretarse como cartografía catastral ni como coordenadas geográficas exactas.
+
+La capa territorial puede crecer hacia:
+- lugares históricos;
+- caminos documentados;
+- edificios;
+- instituciones;
+- cambios de paisaje;
+- crecimiento urbano;
+- mapas históricos;
+- comparación espacial antes/ahora.
 
 ### REGLA HISTÓRICA
 
@@ -37,24 +45,18 @@ Todo contenido debe distinguirse entre DOCUMENTADO, TESTIMONIO, RECONSTRUCCIÓN 
 
 Nunca se inventan hechos para completar una escena.
 
-### CIERRE DE V0.3
+### ARQUITECTURA
 
-Antes de pasar a V0.4 deben quedar consolidados:
+EXPERIENCE · TIME ENGINE · HISTORY ENGINE · TERRITORY ENGINE · MEDIA ENGINE · SOURCES ENGINE · EDUCATION ENGINE · CORE
 
-1. entidades y relaciones;
-2. navegación temporal;
-3. fichas y fuentes;
-4. validación;
-5. cola de investigación;
-6. arquitectura de medios;
-7. auditoría funcional del recorrido completo.
+La historia vive en `js/history/model.js`. La presentación vive en `js/content.js`. La capa territorial vive en su propio motor.
 
 ### HOJA DE RUTA
 
 V0.1 Motor del viaje — cerrado  
 V0.2 Experiencia + contenido desacoplado — cerrado  
-V0.3 Motor histórico — activo  
-V0.4 Motor territorial  
+V0.3 Motor histórico — consolidado  
+V0.4 Motor territorial — activo  
 V0.5 Fuentes + memoria  
 V0.6 Antes / Ahora  
 V0.7 Audio + narrativa  

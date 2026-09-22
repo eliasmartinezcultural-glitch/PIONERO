@@ -40,7 +40,7 @@
     <div><p id="sceneDate" class="eyebrow"></p><h2 id="sceneTitle"></h2><p id="sceneHint" class="scene-hint"></p></div>
     <button id="sourceButtonScene" class="icon-button">Fuentes</button>
   </div>
-  <div class="scene">
+  <div id="scene" class="scene">
     <div class="scene-sky"></div><div class="scene-sun"></div><div class="scene-hills"></div><div class="scene-ground"></div><div class="scene-road"></div>
     <div class="scene-object object-a"></div><div class="scene-object object-b"></div>
     <div id="memoryPoints" class="memory-points"></div>
@@ -51,7 +51,13 @@
     <button id="discoverButton" class="primary-button">Descubrir <span>→</span></button>
     <button id="nextEra" class="secondary-button">Siguiente →</button>
   </div>
-  <div class="scene-actions"><button id="compareButton" class="secondary-button">Comparar con hoy</button></div>
+  <div class="scene-actions"><button id="territoryButton" class="secondary-button">Explorar territorio</button><button id="compareButton" class="secondary-button">Comparar con hoy</button></div>
+  <div id="territoryPanel" class="territory-panel" hidden>
+    <div class="territory-head"><div><p class="eyebrow">MOTOR TERRITORIAL</p><h3>¿Dónde estamos?</h3><p id="territoryDescription"></p></div><button id="closeTerritory" class="secondary-button">Cerrar</button></div>
+    <div id="territoryMap" class="territory-map" role="img" aria-label="Esquema territorial interactivo"></div>
+    <div id="territoryLegend" class="territory-legend"></div>
+    <div id="territoryInfo" class="territory-info"></div>
+  </div>
   <div id="discoveryPanel" class="panel" hidden></div>
 </section>
 </main>

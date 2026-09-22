@@ -1,136 +1,77 @@
 # PIONERO — PLAN MAESTRO CENTRAL
 
-> **Estado operativo: V0.3.1**
+> **V0.4.0 — MOTOR TERRITORIAL ACTIVO**
 >
 > Regla: **COMPLEJO PARA CONSTRUIR → SIMPLE PARA USAR.**
 
 ## VISIÓN
-
-PIONERO es un viaje interactivo por la historia de San Patricio del Chañar. No busca ser una enciclopedia ni una línea de tiempo convencional.
-
-Flujo objetivo:
-
-**abrir → entender → viajar → llegar → explorar → descubrir → comparar → volver**
-
-Pregunta central:
+PIONERO es un viaje interactivo por la historia de San Patricio del Chañar. La experiencia busca responder:
 
 **¿Cómo llegamos desde aquel Chañar hasta este Chañar?**
 
-## LEY MUNDIAL DE DESARROLLO
+Flujo:
 
-### Prohibido
-- parches aislados;
-- sistemas duplicados;
-- regresiones;
-- inventar historia;
-- interfaz técnica innecesaria;
-- avanzar de versión por cambios cosméticos.
+**abrir → entender → viajar → llegar → explorar → descubrir → ubicar → comparar → volver**
 
-### Obligatorio
-- auditar;
-- diseñar;
-- construir;
-- integrar;
-- curar;
-- validar;
-- consolidar;
-- recién después avanzar.
+## V0.4 — TIEMPO → TERRITORIO
 
-## V0.3 — MOTOR HISTÓRICO
+El motor territorial introduce una segunda coordenada conceptual de la historia: el **dónde**.
 
-### Capas cerradas o implementadas
-**REGISTRY → ENTIDADES → RELACIONES → FUENTES → VALIDACIÓN → CONSULTAS**
+### Arquitectura
+`TERRITORY MODEL → TERRITORY QUERIES → TERRITORY VIEW`
 
-### V0.3.1 — EXPERIENCIA HISTÓRICA CONECTADA
+El motor no depende de la interfaz y puede crecer independientemente.
 
-Se incorporó:
+### Principios
+- esquema, no falsa precisión;
+- sólo relaciones territoriales sustentadas o claramente marcadas como parciales;
+- cada nodo puede apuntar a una entidad histórica;
+- cada época puede tener su propia lectura territorial;
+- las capas visuales no son una segunda base histórica.
 
-- rail temporal único derivado de `HISTORY.eras`;
-- navegación anterior/siguiente;
-- fichas genéricas de entidades;
-- relaciones derivadas del registry;
-- fuentes dinámicas;
-- resumen de estado de investigación;
-- cola interna `researchQueue()`;
-- estructura de medios con `mediaIds`;
-- escape HTML en contenido dinámico;
-- progreso basado en el número real de huellas.
+### Capa actual
+- Río Neuquén;
+- área esquemática de la localidad;
+- área productiva en transformación;
+- conexiones conceptuales entre agua, producción y asentamiento.
 
-### Arquitectura de medios
+### Próximo desarrollo de V0.4
+1. incorporar lugares históricos documentados;
+2. modelar edificios e instituciones cuando exista evidencia;
+3. introducir caminos documentados;
+4. preparar geometrías históricas separadas de la presentación;
+5. incorporar mapas/documentos como medios con procedencia.
 
-El modelo ya reserva `media` como entidad independiente. Cada entidad histórica puede referenciar `mediaIds`; las relaciones `depicts` permitirán conectar material sin meter URLs o lógica multimedia dentro de las escenas.
+## V0.5
+Fuentes + memoria:
+- ficha profunda de fuente;
+- documentos;
+- fotografías;
+- testimonios;
+- procedencia;
+- créditos;
+- derechos de uso.
 
-Campos recomendados para el siguiente ciclo:
-- id
-- title
-- kind
-- status
-- url
-- alt
-- credit
-- sourceIds
-- entityIds
+## V0.6
+Antes / Ahora:
+- pares espaciales;
+- comparación verificable;
+- mismo lugar;
+- misma orientación cuando sea posible.
 
-No cargar medios históricos no verificados sólo para hacer más espectacular la interfaz.
+## V0.7
+Audio + narrativa.
 
-### Cola de investigación
+## V0.8
+Reconstrucciones visuales.
 
-Los registros `partial` y `pending` son deuda de investigación visible para el sistema pero no deben presentarse al visitante como hechos cerrados.
+## V0.9
+Educación.
 
-## V0.4 — MOTOR TERRITORIAL
+## V1.0
+Experiencia histórica completa.
 
-Siguiente gran salto:
+### DEFINICIÓN DE TERMINADO
+**integrado · funcional · validado · curado · documentado · preparado para la siguiente**.
 
-**TIEMPO → TERRITORIO**
-
-Construir una capa espacial capaz de relacionar:
-- lugares;
-- caminos;
-- río;
-- edificios;
-- paisaje;
-- producción;
-- crecimiento urbano;
-- transformaciones.
-
-El visitante deberá poder comprender no sólo cuándo ocurrió algo, sino dónde y cómo cambió ese lugar.
-
-## V0.5 — FUENTES + MEMORIA
-
-Construir ficha profunda de fuente, documentos, fotografías, testimonios, procedencia y atribución.
-
-## V0.6 — ANTES / AHORA
-
-Comparaciones sólo cuando exista material histórico y actual verificable para el mismo lugar.
-
-## V0.7 — AUDIO + NARRATIVA
-
-Narración, ambientes, testimonios y diseño sonoro como parte del relato.
-
-## V0.8 — RECONSTRUCCIONES
-
-Reconstrucciones visuales claramente etiquetadas.
-
-## V0.9 — EDUCACIÓN
-
-Aprender mediante exploración, no mediante una interfaz escolar pesada.
-
-## V1.0 — EXPERIENCIA HISTÓRICA COMPLETA
-
-Historia + territorio + fuentes + memoria + experiencia + comparación + narrativa.
-
-## V1.5
-
-Exploración avanzada y recorridos temáticos.
-
-## V2.0
-
-360°, WebXR, AR y recorridos físicos mediante QR, sólo después de consolidar la base.
-
-## DEFINICIÓN DE TERMINADO
-
-Un hito sólo queda cerrado cuando:
-
-**integrado · funcional · validado · curado · documentado · preparado para la siguiente**
-
-Antes de declarar V0.3 cerrado corresponde realizar una auditoría funcional completa y, si el entorno lo permite, una verificación de navegador.
+No se declara cerrado por cantidad de código.
