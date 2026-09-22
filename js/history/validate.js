@@ -5,6 +5,7 @@ const collectionName=type=>type==="era"?"eras":type==="media"?"media":type+"s";
 export function validateHistory(model){
   const issues=[];
   const globalIds=new Map();
+  const entityIds=new Set();
 
   for(const type of ENTITY_TYPES){
     const collection=model[collectionName(type)]||[];
@@ -16,8 +17,11 @@ export function validateHistory(model){
       if(item.id&&local.has(item.id))issues.push({level:"error",type,id:item.id,message:"id duplicado dentro de la colección"});
       if(item.id)local.add(item.id);
 
-      if(item.id&&globalIds.has(type+":"+item.id))issues.push({level:"error",type,id:item.id,message:"id duplicado globalmente"});
-      else if(item.id)globalIds.set(type+":"+item.id,type);
+      if(item.id&&entityIds.has(item.id))issues.push({level:"error",type,id:item.id,message:"id duplicado entre tipos de entidad"});
+      else if(item.id){
+        entityIds.add(item.id);
+        globalIds.set(type+":"+item.id,type);
+      }
 
       for(const field of required)if(item[field]===undefined||item[field]===null||item[field]==="")issues.push({level:"error",type,id:item.id,message:"campo obligatorio ausente: "+field});
 
@@ -37,7 +41,7 @@ export function validateHistory(model){
 
   for(const relation of model.relations||[]){
     if(!relation.id)issues.push({level:"error",type:"relation",message:"relación sin id"});
-    if(relation.id&&[...globalIds.keys()].some(key=>key.endsWith(":"+relation.id)))issues.push({level:"error",type:"relation",id:relation.id,message:"id de relación colisiona con entidad"});
+    if(relation.id&&entityIds.has(relation.id))issues.push({level:"error",type:"relation",id:relation.id,message:"id de relación colisiona con entidad"});
     if(!RELATION_TYPES.includes(relation.type))issues.push({level:"error",type:"relation",id:relation.id,message:"tipo de relación inválido: "+relation.type});
     for(const side of [relation.from,relation.to]){
       const key=side&&ENTITY_TYPES.includes(side.type)?side.type+":"+side.id:"";
