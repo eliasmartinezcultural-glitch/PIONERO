@@ -96,6 +96,8 @@ No se agregan geometrías precisas sin evidencia documental suficiente.
 
 El resultado queda expuesto en `window.PIONERO.audit`.
 
+La suite `window.PIONERO.smoke.run()` recorre las 7 eras, prueba descubrimientos, paneles, territorio, progreso y rechaza referencias inválidas. Además, `.github/workflows/pionero-ci.yml` ejecuta la validación automáticamente en cada push y pull request.
+
 ### ESTADO Y PERSISTENCIA
 
 `js/core/state.js` centraliza:
@@ -131,3 +133,11 @@ V2.0 360° / WebXR / experiencias inmersivas
 **integrado · funcional · validado · curado · documentado · preparado para la siguiente**
 
 No se declara cerrado por cantidad de código.
+
+### GUARDIA DE ARRANQUE
+
+`js/core/runtime.js` protege la experiencia frente a errores de carga o ejecución. Si el motor no llega a inicializarse, PIONERO muestra una pantalla de recuperación en lugar de dejar una página vacía.
+
+### CALIDAD CONTINUA
+
+La estabilidad no depende sólo de una prueba manual. PIONERO cuenta ahora con una prueba determinista del recorrido y una validación automática de sintaxis e integridad.
