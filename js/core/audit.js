@@ -67,6 +67,7 @@ function validateVersions(content,history,territory,issues){
   if(new Set(versions).size>1)issues.push(issue("versions","project","versiones internas desalineadas: "+versions.join(" / ")));
 }
 function validateDom(issues){
+  if(typeof document==="undefined")return;
   const ids=[...document.querySelectorAll("[id]")].map(node=>node.id).filter(Boolean),counts=new Map();
   for(const id of ids)counts.set(id,(counts.get(id)||0)+1);
   for(const [id,count] of counts)if(count>1)issues.push(issue("dom",id,"id HTML duplicado ("+count+")"));
