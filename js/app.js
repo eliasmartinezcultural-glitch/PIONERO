@@ -76,7 +76,7 @@ function renderEntity(entity){
 }
 function discover(pointId){
   const point=(CONTENT.points[currentEra.id]||[]).find(item=>item.id===pointId);if(!point)return;
-  visited.add(currentEra.id+":"+point.id);save();const resolved=resolveEntity(point),panel=$("#discoveryPanel");
+  visited.add(currentEra.id+":"+point.id);save();closeTerritory();const resolved=resolveEntity(point),panel=$("#discoveryPanel");
   panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir explorando</button>';
   panel.hidden=false;$("#closeDiscovery").onclick=closeDiscovery;panel.scrollIntoView({behavior:"smooth",block:"nearest"});renderPoints();
 }
@@ -98,11 +98,12 @@ function showTerritoryNode(id){
   const layer=TERRITORY.layers.find(item=>item.id===node.layerId);
   $("#territoryInfo").innerHTML='<div class="panel-meta">'+esc(layer?.label||"TERRITORIO")+'</div><h4>'+esc(node.title)+'</h4><p>'+esc(place?.description||"")+'</p><p class="point-note">Referencia espacial esquemática. La ubicación visual no pretende sustituir una cartografía documental.</p>';
 }
-function openTerritory(){renderTerritory();$("#territoryPanel").hidden=false;$("#territoryPanel").scrollIntoView({behavior:"smooth",block:"nearest");}
+function openTerritory(){closeDiscovery();renderTerritory();$("#territoryPanel").hidden=false;$("#territoryPanel").scrollIntoView({behavior:"smooth",block:"nearest");}
 function closeTerritory(){$("#territoryPanel").hidden=true;}
 function closeDiscovery(){$("#discoveryPanel").hidden=true;}
 function compare(){
   if(!currentEra)return;
+  closeTerritory();
   const events=queries.eventsByEra(currentEra.id),evidence=events.length?events.map(event=>event.title).join(" · "):"Sin eventos registrados para esta etapa.";
   $("#discoveryPanel").innerHTML='<div class="panel-meta">COMPARACIÓN PREPARADA</div><h3>'+esc(currentEra.label)+' → HOY</h3><p>Esta etapa contiene '+events.length+' registro(s) en el motor histórico. La comparación visual se activará cuando exista material histórico y actual verificable para el mismo lugar.</p><p class="reference"><b>Huella histórica:</b> '+esc(evidence)+'</p><button id="closeCompare" class="secondary-button">Volver a explorar</button>';
   $("#discoveryPanel").hidden=false;$("#closeCompare").onclick=()=>$("#discoveryPanel").hidden=true;
