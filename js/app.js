@@ -4,7 +4,8 @@ import {createHistoryRegistry} from "./history/registry.js";
 import {createHistoryQueries} from "./history/queries.js";
 import {validateHistory} from "./history/validate.js";
 import {TERRITORY} from "./territory/model.js";
-import {createTerritoryQueries} from "./territory/queries.js";\nimport {auditPionero} from "./core/audit.js";
+import {createTerritoryQueries} from "./territory/queries.js";
+import {auditPionero} from "./core/audit.js";
 
 const $=selector=>document.querySelector(selector);
 const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
@@ -89,7 +90,8 @@ function showTerritoryNode(id){
   $("#territoryInfo").innerHTML='<div class="panel-meta">'+esc(layer?.label||"TERRITORIO")+'</div><h4>'+esc(node.title)+'</h4><p>'+esc(place?.description||"")+'</p><p class="point-note">Referencia espacial esquemática. La ubicación visual no pretende sustituir una cartografía documental.</p>';
 }
 function openTerritory(){renderTerritory();$("#territoryPanel").hidden=false;$("#territoryPanel").scrollIntoView({behavior:"smooth",block:"nearest");}
-function closeTerritory(){$("#territoryPanel").hidden=true;}\nfunction closeDiscovery(){$("#discoveryPanel").hidden=true;}
+function closeTerritory(){$("#territoryPanel").hidden=true;}
+function closeDiscovery(){$("#discoveryPanel").hidden=true;}
 function compare(){
   if(!currentEra)return;
   const events=queries.eventsByEra(currentEra.id),evidence=events.length?events.map(event=>event.title).join(" · "):"Sin eventos registrados para esta etapa.";
