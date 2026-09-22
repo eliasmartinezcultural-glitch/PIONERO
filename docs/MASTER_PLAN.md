@@ -227,7 +227,7 @@ Debe contener:
 ---
 
 ## V0.3 — MOTOR HISTÓRICO
-**PRÓXIMO HITO**
+**EN CONSTRUCCIÓN**
 
 No consiste en agregar más años.
 
@@ -253,6 +253,15 @@ Consiste en convertir PIONERO en una máquina capaz de relacionar información h
 ### Resultado esperado
 
 Agregar un nuevo acontecimiento histórico no debe exigir reescribir la interfaz.
+
+### Núcleo ya construido
+
+- `js/history/model.js` — modelo central de entidades y relaciones.
+- `js/history/registry.js` — registro/indexación y consultas de relaciones.
+- `js/history/validate.js` — validación estructural de IDs, estados, evidencia y referencias.
+- `js/app.js` — integración del motor con la experiencia existente.
+
+El siguiente trabajo de V0.3 es ampliar el modelo sin duplicar fuentes de verdad, incorporar consultas de eventos/personas/lugares/fuentes y cerrar la validación con casos reales.
 
 ---
 
