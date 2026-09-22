@@ -7,6 +7,7 @@ import {TERRITORY} from "./territory/model.js";
 import {createTerritoryQueries} from "./territory/queries.js";
 import {auditPionero} from "./core/audit.js";
 import {createExperienceState} from "./core/state.js";
+import {createSmokeSuite} from "./core/smoke.js";
 
 const $=selector=>document.querySelector(selector);
 const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
@@ -15,6 +16,7 @@ const queries=createHistoryQueries(history);
 const territory=createTerritoryQueries(TERRITORY);
 const validation=validateHistory(HISTORY);
 const state=createExperienceState({eras:HISTORY.eras,content:CONTENT});
+const smoke=createSmokeSuite({history,territory,validation,audit:null,createState:createExperienceState,content:CONTENT});
 const kindLabel={documented:"DOCUMENTADO",testimony:"TESTIMONIO",reconstruction:"RECONSTRUCCIÓN",interpretation:"INTERPRETACIÓN"};
 const statusLabel={verified:"VERIFICADO",partial:"PARCIAL",pending:"PENDIENTE"};
 
@@ -147,8 +149,9 @@ document.onkeydown=event=>{
 };
 
 const audit=auditPionero({content:CONTENT,history:HISTORY,territory:TERRITORY});
+const smokeSuite=createSmokeSuite({history,territory,validation,audit,createState:createExperienceState,content:CONTENT});
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
 state.subscribe(snapshot=>{renderView();renderPanels();if(snapshot.view==="scene"&&snapshot.eraId){renderTimeline(snapshot.eraId);renderPoints();}});
-window.PIONERO={history,queries,territory,validation,audit,state,version:"0.4.1",ready:false};
+window.PIONERO={history,queries,territory,validation,audit,state,smoke:smokeSuite,version:"0.4.1",ready:false};
 renderEras();renderView();renderPanels();window.PIONERO.ready=true;
