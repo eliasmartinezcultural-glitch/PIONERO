@@ -1,4 +1,4 @@
-export function createSmokeSuite({history,territory,validation,audit,createState,content}){
+export function createSmokeSuite({history,territory,validation,audit,createState,content,territoryData}){
   function run(){
     const issues=[];
     const check=(condition,message)=>{if(!condition)issues.push(message);};
@@ -41,14 +41,19 @@ export function createSmokeSuite({history,territory,validation,audit,createState
     testState.clearProgress();
     check(testState.progress().visited===0,"clearProgress no limpió el progreso.");
 
-    const reloaded=createState({eras,content,storageKey:"pionero.smoke.persistence"});
-    reloaded.clearProgress();
-    reloaded.visit(eras[0].id,(content.points[eras[0].id]||[])[0]?.id);
-    const restored=createState({eras,content,storageKey:"pionero.smoke.persistence"});
+    const persistenceKey="pionero.smoke.persistence";
+    const first=createState({eras,content,storageKey:persistenceKey});
+    first.clearProgress();
+    const firstPoint=(content.points[eras[0].id]||[])[0];
+    check(Boolean(firstPoint),"La primera era no tiene una huella para probar persistencia.");
+    if(firstPoint)check(first.visit(eras[0].id,firstPoint.id),"No se pudo guardar una huella para probar persistencia.");
+    const restored=createState({eras,content,storageKey:persistenceKey});
     check(restored.progress().visited===1,"La persistencia de progreso no pudo restaurarse.");
     restored.clearProgress();
 
-    return {valid:issues.length===0,issues,summary:{eras:eras.length,points:expected,territoryNodes:territory.nodes.length,territoryConnections:territory.connections.length}};
+    const territoryNodes=territoryData?.nodes?.length??eras.reduce((sum,era)=>sum+(territory.summaryForEra(era.id).nodes?.length||0),0);
+    const territoryConnections=territoryData?.connections?.length??eras.reduce((sum,era)=>sum+(territory.summaryForEra(era.id).connections?.length||0),0);
+    return {valid:issues.length===0,issues,summary:{eras:eras.length,points:expected,territoryNodes,territoryConnections}};
   }
   return {run};
 }
