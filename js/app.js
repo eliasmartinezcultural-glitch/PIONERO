@@ -32,7 +32,7 @@ function esc(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&am
 function save(){
   const validKeys=new Set(Object.entries(CONTENT.points).flatMap(([eraId,points])=>points.map(point=>eraId+":"+point.id)));
   visited=new Set([...visited].filter(key=>validKeys.has(key)));
-  localStorage.setItem(KEY,JSON.stringify([...visited]));
+  try{localStorage.setItem(KEY,JSON.stringify([...visited]));}catch(error){console.warn("PIONERO: no se pudo persistir el progreso",error);}
   updateProgress();
 }
 function updateProgress(){
