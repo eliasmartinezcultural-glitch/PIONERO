@@ -24,19 +24,29 @@ export function createSmokeSuite({history,territory,validation,audit,createState
       check(testState.read().openPanel==="territory","Panel territorio incorrecto en "+era.id+".");
       check(testState.openPanel("compare"),"No se pudo cambiar a comparación en "+era.id+".");
       check(testState.read().openPanel==="compare","Panel comparación incorrecto en "+era.id+".");
-      testState.closePanel();
+      check(testState.closePanel(),"No se pudo cerrar el panel en "+era.id+".");
+      check(testState.read().openPanel===null,"Quedó un panel abierto en "+era.id+".");
       const summary=territory.summaryForEra(era.id);
       check(Array.isArray(summary.nodes),"Territorio sin nodos.");
       check(Array.isArray(summary.connections),"Territorio sin conexiones.");
-      check(summary.connections.every(connection=>summary.nodes.some(node=>node.id===connection.from)&&summary.nodes.some(node=>node.id===connection.to),"Conexión territorial inválida en "+era.id+".");
+      check(summary.connections.every(connection=>summary.nodes.some(node=>node.id===connection.from)&&summary.nodes.some(node=>node.id===connection.to)),"Conexión territorial inválida en "+era.id+".");
     }
 
     const progress=testState.progress();
     const expected=Object.values(content.points).reduce((sum,points)=>sum+points.length,0);
     check(progress.total===expected,"El total de progreso no coincide con el contenido.");
     check(progress.visited===expected,"No se pudieron descubrir todas las huellas.");
+    check(progress.ratio===1,"El ratio final de progreso no llegó a 1.");
     check(!testState.visit("missing-era","missing-point"),"Se aceptó una huella inexistente.");
     testState.clearProgress();
+    check(testState.progress().visited===0,"clearProgress no limpió el progreso.");
+
+    const reloaded=createState({eras,content,storageKey:"pionero.smoke.persistence"});
+    reloaded.clearProgress();
+    reloaded.visit(eras[0].id,(content.points[eras[0].id]||[])[0]?.id);
+    const restored=createState({eras,content,storageKey:"pionero.smoke.persistence"});
+    check(restored.progress().visited===1,"La persistencia de progreso no pudo restaurarse.");
+    restored.clearProgress();
 
     return {valid:issues.length===0,issues,summary:{eras:eras.length,points:expected,territoryNodes:territory.nodes.length,territoryConnections:territory.connections.length}};
   }
