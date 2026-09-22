@@ -20,3 +20,37 @@
 @keyframes heroRise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}@keyframes heroTitle{from{opacity:0;transform:translateY(18px) scale(.98);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}@keyframes heroText{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes letterReveal{from{opacity:0;letter-spacing:.05em}to{opacity:1;letter-spacing:.17em}}@keyframes lineIn{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}@keyframes cardIn{from{opacity:0;transform:translateY(20px) rotateX(4deg)}to{opacity:1;transform:none}}@keyframes atmosphereDrift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,1%,0) scale(1.03)}}@keyframes sunFloat{from{transform:translateY(0)}to{transform:translateY(9px)}}@keyframes pointPulse{0%,100%{box-shadow:0 5px 18px #0003}50%{box-shadow:0 7px 26px #9d6e3a45}}@keyframes panelRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}@keyframes mapBreath{from{transform:scale(.98);opacity:.5}to{transform:scale(1.01);opacity:.8}}@keyframes connectionIn{from{opacity:0;transform-origin:left center;transform:scaleX(0)}to{opacity:1}}
 @media(max-width:700px){.welcome-landscape span{width:68px;height:68px;right:8%;bottom:22%;font-size:9px}.scene{height:58vh;min-height:420px;border-radius:0}.scene-time-mark{right:12px;top:12px;font-size:8px}.memory-point{width:30px;height:30px}.memory-point:after{inset:7px}.scene-caption{left:10px;right:10px;bottom:10px}.era-card{min-height:190px}}
 @media(prefers-reduced-motion:reduce){.welcome-content,.welcome-content *,.era-card,.scene-atmosphere,.scene-sun,.memory-point,.territory-map:after,.territory-connection,.panel,.modal-card{animation:none!important}}
+
+/* PIONERO · TEMPORAL TERRITORY EXPERIENCE */
+.scene{--terrain-depth:.3;--water-strength:.5;--production-strength:.2;--settlement-strength:.1;--road-strength:.1;min-height:520px;height:min(70vh,700px);background:#a99779}
+.scene-sky{transition:background 700ms ease,filter 700ms ease}
+.scene-hills{height:calc(34% + var(--terrain-depth)*18%);bottom:31%;transform:translateY(calc((.5 - var(--terrain-depth))*24px));transition:height 900ms cubic-bezier(.2,.8,.2,1),transform 900ms ease,filter 700ms ease}
+.scene-ground{background:linear-gradient(165deg,#a18e6d,#776a55);transition:filter 900ms ease}
+.scene-relief{position:absolute;inset:42% -8% -8%;z-index:0;opacity:.45;background:
+  radial-gradient(ellipse at 12% 58%,transparent 0 22%,#5f574a 23% 24%,transparent 25%),
+  radial-gradient(ellipse at 45% 72%,transparent 0 28%,#5f574a 29% 30%,transparent 31%),
+  radial-gradient(ellipse at 82% 45%,transparent 0 20%,#5f574a 21% 22%,transparent 23%);
+  transform:scale(calc(.94 + var(--terrain-depth)*.12));transition:transform 900ms ease,opacity 900ms ease;pointer-events:none}
+.scene-water{position:absolute;z-index:1;right:9%;top:22%;width:12%;height:88%;background:linear-gradient(90deg,#78979a,#b0c3c0,#718f91);opacity:calc(.18 + var(--water-strength)*.65);border-radius:48%;transform:rotate(10deg);filter:blur(.2px);transition:opacity 900ms ease,width 900ms ease}
+.scene-production{position:absolute;z-index:1;left:8%;right:32%;bottom:17%;height:25%;opacity:calc(.05 + var(--production-strength)*.35);background:repeating-linear-gradient(4deg,transparent 0 14px,#e2cfa7 15px 17px);transform:skewY(-4deg);transition:opacity 900ms ease}
+.scene-settlement{position:absolute;z-index:2;left:42%;right:30%;bottom:29%;height:calc(2% + var(--settlement-strength)*17%);opacity:calc(.08 + var(--settlement-strength)*.75);background:
+  linear-gradient(90deg,transparent 0 8%,#55493c 9% 12%,transparent 13% 28%,#55493c 29% 34%,transparent 35% 54%,#55493c 55% 59%,transparent 60% 78%,#55493c 79% 84%,transparent 85%);
+  transition:height 900ms ease,opacity 900ms ease}
+.scene-road{opacity:calc(.12 + var(--road-strength)*.75);transition:opacity 900ms ease}
+.temporal-badge{position:absolute;z-index:4;top:22px;left:22px;display:grid;gap:5px;padding:12px 15px;background:#171510cc;color:#fffaf0;backdrop-filter:blur(8px);border:1px solid #fff3;box-shadow:0 12px 35px #0003;pointer-events:none}
+.temporal-badge span{font:9px Arial;letter-spacing:.16em;opacity:.7}.temporal-badge b{font:600 15px Georgia;letter-spacing:.02em}
+.temporal-controls{position:absolute;z-index:5;left:22px;right:22px;bottom:58px;display:flex;align-items:center;gap:12px;padding:11px 13px;background:#171510c7;backdrop-filter:blur(10px);border:1px solid #fff2;box-shadow:0 12px 35px #0003}
+.time-control{width:34px;height:34px;border:1px solid #fff5;border-radius:50%;background:#fff1;color:#fffaf0;cursor:pointer;font-size:17px}.time-control:hover{background:#fff2}
+.time-track{position:relative;height:30px;flex:1;display:flex;align-items:center}.time-track:before{content:"";position:absolute;left:0;right:0;height:1px;background:#fff5}.time-progress{position:absolute;left:0;height:2px;width:0;background:#fffaf0;transition:width 650ms cubic-bezier(.2,.8,.2,1)}
+.time-stops{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center}.time-stop{width:12px;height:12px;border-radius:50%;border:1px solid #fff9;background:#171510;cursor:pointer;padding:0;position:relative;transition:transform .2s ease,background .2s ease}.time-stop:after{content:attr(data-label);position:absolute;top:18px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#fffaf0;font:8px Arial;opacity:.65}.time-stop.is-active{background:#fffaf0;transform:scale(1.35)}
+.scene-mode{position:absolute;z-index:4;right:22px;top:22px;display:flex;gap:12px;align-items:center;color:#fffaf0;font:8px Arial;letter-spacing:.11em;text-shadow:0 1px 5px #000}.scene-mode span:first-child{opacity:.7}
+.scene[data-phase="fundacion"] .scene-hills,.scene[data-phase="instituciones"] .scene-hills,.scene[data-phase="comunidad"] .scene-hills{filter:saturate(.8)}
+.scene[data-phase="presente"] .scene-settlement{filter:contrast(1.05)}
+.temporal-transition{position:absolute;inset:0;z-index:10;background:#171510;opacity:0;pointer-events:none;transition:opacity 220ms ease}.temporal-transition.is-active{opacity:.42}
+@media(max-width:700px){
+  .scene{min-height:540px;height:68vh}
+  .temporal-badge{top:14px;left:14px}.temporal-controls{left:14px;right:14px;bottom:52px}.scene-mode{right:14px;top:14px}.scene-mode span:first-child{display:none}.time-stop:after{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .scene-sky,.scene-hills,.scene-ground,.scene-relief,.scene-water,.scene-production,.scene-settlement,.scene-road,.time-progress{transition:none!important}
+}
