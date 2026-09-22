@@ -9,23 +9,25 @@ export const HISTORY={
     {id:"present",label:"HOY",title:"San Patricio del Chañar en el presente",status:"partial"}
   ],
   events:[
-    {id:"event-gasparri-1968",eraId:"1968",title:"La firma Gasparri adquiere tierras en el área del Chañar",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024"]},
-    {id:"event-irrigation-1969",eraId:"1969",title:"Comienzan obras de sistematización del riego",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024","source-legislatura-2019"]},
-    {id:"event-foundation-1973",eraId:"1973",title:"Fundación de San Patricio del Chañar",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-neuqueninforma-2016","source-estadistica-neuquen"]},
-    {id:"event-commission-1974",eraId:"1974",title:"Puesta en funcionamiento de la Comisión de Fomento",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-neuqueninforma-2016","source-neuqueneldesafio-2014"]},
-    {id:"event-first-industrial-fruit-1975",eraId:"1975",title:"Primeras cantidades industriales de fruta",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2014"]},
-    {id:"event-school-1975",eraId:"1975",title:"Comienza a funcionar la Escuela N.º 273",evidence:"documented",status:"partial",sourceIds:["source-masneuquen-2024"]}
+    {id:"event-gasparri-1968",eraId:"1968",title:"La firma Gasparri adquiere tierras en el área del Chañar",description:"Los antecedentes de la transformación productiva del área forman parte del recorrido histórico.",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024"],mediaIds:[]},
+    {id:"event-irrigation-1969",eraId:"1969",title:"Comienzan obras de sistematización del riego",description:"El desarrollo del riego modifica las posibilidades productivas del territorio.",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024","source-legislatura-2019"],mediaIds:[]},
+    {id:"event-foundation-1973",eraId:"1973",title:"Fundación de San Patricio del Chañar",description:"La localidad fue fundada el 21 de mayo de 1973, según registros oficiales provinciales.",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-neuqueninforma-2016","source-estadistica-neuquen"],mediaIds:[]},
+    {id:"event-commission-1974",eraId:"1974",title:"Puesta en funcionamiento de la Comisión de Fomento",description:"La Comisión de Fomento y sus autoridades comienzan a funcionar en 1974.",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-neuqueninforma-2016","source-neuqueneldesafio-2014"],mediaIds:[]},
+    {id:"event-first-industrial-fruit-1975",eraId:"1975",title:"Primeras cantidades industriales de fruta",description:"Una reseña oficial recuerda que al año siguiente comenzaron las primeras cantidades industriales de fruta.",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2014"],mediaIds:[]},
+    {id:"event-school-1975",eraId:"1975",title:"La Escuela N.º 273 aparece en la cronología local",description:"La cronología secundaria consultada ubica el funcionamiento de la Escuela N.º 273 en 1975; queda marcado como parcial hasta incorporar documentación primaria.",evidence:"documented",status:"partial",sourceIds:["source-masneuquen-2024"],mediaIds:[]}
   ],
   people:[
-    {id:"person-roberto-gasparri",title:"Roberto Gasparri",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2013","source-neuqueninforma-2010"]},
-    {id:"person-tulio-ferrareso",title:"Tulio Eduardo Ferrareso",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2010","source-masneuquen-2024"]},
-    {id:"person-felipe-sapag",title:"Felipe Sapag",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2016"]}
+    {id:"person-roberto-gasparri",title:"Roberto Gasparri",description:"Figura vinculada a los antecedentes productivos y territoriales del área.",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2013","source-neuqueninforma-2010"]},
+    {id:"person-tulio-ferrareso",title:"Tulio Eduardo Ferrareso",description:"La documentación consultada lo vincula con la primera Comisión de Fomento.",evidence:"documented",status:"partial",sourceIds:["source-neuqueninforma-2010","source-masneuquen-2024"]},
+    {id:"person-felipe-sapag",title:"Felipe Sapag",description:"Gobernador provincial durante la creación de la Comisión de Fomento.",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2016"]}
   ],
   places:[
-    {id:"place-chanar",title:"San Patricio del Chañar",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-estadistica-neuquen"]},
-    {id:"place-rio-neuquen",title:"Río Neuquén",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024"]}
+    {id:"place-chanar",title:"San Patricio del Chañar",description:"El territorio que da nombre y sentido al recorrido.",evidence:"documented",status:"verified",sourceIds:["source-neuqueninforma-2014","source-estadistica-neuquen"],mediaIds:[]},
+    {id:"place-rio-neuquen",title:"Río Neuquén",description:"Fuente de agua asociada a las obras de riego del desarrollo productivo.",evidence:"documented",status:"partial",sourceIds:["source-cfi-2024"],mediaIds:[]}
   ],
-  institutions:[],objects:[],media:[],
+  institutions:[],
+  objects:[],
+  media:[],
   relations:[
     {id:"rel-gasparri-place",type:"located_in",from:{type:"event",id:"event-gasparri-1968"},to:{type:"place",id:"place-chanar"}},
     {id:"rel-irrigation-place",type:"located_in",from:{type:"event",id:"event-irrigation-1969"},to:{type:"place",id:"place-chanar"}},
