@@ -4,10 +4,11 @@ export function createExperienceState({eras,content,storageKey="pionero.progress
     (Array.isArray(points)?points:[]).map(point=>eraId+":"+point.id)
   ));
   const listeners=new Set();
-  let state={view:"welcome",eraId:null,openPanel:null,visited:new Set()};
+  const defaultCamera={zoom:1,focusX:50,focusY:50,angle:0};
+  let state={view:"welcome",eraId:null,openPanel:null,visited:new Set(),camera:{...defaultCamera}};
 
   function snapshot(){
-    return {view:state.view,eraId:state.eraId,openPanel:state.openPanel,visited:new Set(state.visited)};
+    return {view:state.view,eraId:state.eraId,openPanel:state.openPanel,visited:new Set(state.visited),camera:{...state.camera}};
   }
   function notify(){const value=snapshot();listeners.forEach(listener=>{try{listener(value);}catch(error){console.error("PIONERO listener",error);}});}
   function persist(){
@@ -40,6 +41,16 @@ export function createExperienceState({eras,content,storageKey="pionero.progress
   }
   function closePanel(){if(state.openPanel===null)return false;state.openPanel=null;notify();return true;}
   function togglePanel(panel){return state.openPanel===panel?closePanel():openPanel(panel);}
+  function setCamera(next={}){
+    const candidate={...state.camera,...next};
+    if(![candidate.zoom,candidate.focusX,candidate.focusY,candidate.angle].every(Number.isFinite))return false;
+    candidate.zoom=Math.min(2,Math.max(.75,candidate.zoom));
+    candidate.focusX=Math.min(100,Math.max(0,candidate.focusX));
+    candidate.focusY=Math.min(100,Math.max(0,candidate.focusY));
+    candidate.angle=Math.min(180,Math.max(-180,candidate.angle));
+    state.camera=candidate;notify();return {...candidate};
+  }
+  function resetCamera(){state.camera={...defaultCamera};notify();return {...state.camera};}
   function visit(eraId,pointId){
     const key=String(eraId)+":"+String(pointId);
     if(!validProgressKeys.has(key))return false;
@@ -62,5 +73,5 @@ export function createExperienceState({eras,content,storageKey="pionero.progress
   }
 
   load();
-  return {read:snapshot,setView,travel,openPanel,closePanel,togglePanel,visit,isVisited,progress,clearProgress,subscribe,persist,validProgressKeys};
+  return {read:snapshot,setView,travel,openPanel,closePanel,togglePanel,setCamera,resetCamera,visit,isVisited,progress,clearProgress,subscribe,persist,validProgressKeys};
 }
