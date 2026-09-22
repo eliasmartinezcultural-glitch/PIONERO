@@ -1,15 +1,16 @@
 export function createHistoryQueries(registry){
   const TYPES=["events","people","places","institutions","objects","media"];
+  const pluralType=type=>registry.pluralType(type);
   return {
     eventsByEra(eraId){return registry.all("events").filter(event=>event.eraId===eraId);},
     entitiesBySource(sourceId){return TYPES.flatMap(type=>registry.all(type).filter(item=>(item.sourceIds||[]).includes(sourceId)));},
     sourcesFor(entity){return (entity?.sourceIds||[]).map(id=>registry.get("sources",id)).filter(Boolean);},
     relatedEntities(type,id,relationType=null){
-      return registry.related(type,id,relationType).map(ref=>registry.get(ref.type==="media"?"media":ref.type+"s",ref.id)).filter(Boolean);
+      return registry.related(type,id,relationType).map(ref=>registry.get(pluralType(ref.type),ref.id)).filter(Boolean);
     },
     entityNetwork(type,id){
       const related=this.relatedEntities(type,id);
-      return {entity:registry.get(type==="media"?"media":type+"s",id),related};
+      return {entity:registry.get(pluralType(type),id),related};
     },
     search(term){
       const q=String(term||"").trim().toLocaleLowerCase("es");
