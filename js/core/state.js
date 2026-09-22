@@ -18,7 +18,7 @@ export function createExperienceState({eras,content,storageKey="pionero.progress
   function load(){
     try{
       const raw=JSON.parse(localStorage.getItem(storageKey)||"[]");
-      state.visited=new Set(Array.isArray(raw)?raw.filter(key=>validProgressKeys.has(key)):[...[]]);
+      state.visited=new Set(Array.isArray(raw)?raw.filter(key=>validProgressKeys.has(key)):[]);
     }catch(error){
       try{localStorage.removeItem(storageKey);}catch{}
       state.visited=new Set();
