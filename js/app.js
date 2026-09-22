@@ -11,7 +11,16 @@ const $=selector=>document.querySelector(selector);
 const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
 const KEY="pionero.progress.v3";
 let currentEra=null;
-let visited=new Set(JSON.parse(localStorage.getItem(KEY)||"[]"));
+function readVisited(){
+  try{
+    const value=JSON.parse(localStorage.getItem(KEY)||"[]");
+    return new Set(Array.isArray(value)?value.filter(item=>typeof item==="string"):[]);
+  }catch{
+    localStorage.removeItem(KEY);
+    return new Set();
+  }
+}
+let visited=readVisited();
 const history=createHistoryRegistry(HISTORY);
 const queries=createHistoryQueries(history);
 const territory=createTerritoryQueries(TERRITORY);
@@ -108,5 +117,9 @@ function goPrevious(){const eras=history.all("eras"),i=eraIndex();if(i>0)travel(
 function goNext(){const eras=history.all("eras"),i=eraIndex();if(i>=0&&i<eras.length-1)travel(eras[i+1].id);}
 $("#startButton").onclick=()=>show("journey");$("#backToJourney").onclick=()=>show("journey");$("#previousEra").onclick=goPrevious;$("#nextEra").onclick=goNext;$("#discoverButton").onclick=()=>currentEra&&CONTENT.points[currentEra.id]?.[0]&&discover(CONTENT.points[currentEra.id][0].id);$("#territoryButton").onclick=openTerritory;$("#closeTerritory").onclick=closeTerritory;$("#compareButton").onclick=compare;$("#sourceButton").onclick=openSources;$("#sourceButtonScene").onclick=openSources;$("#closeModal").onclick=closeModal;$("#modal").onclick=event=>{if(event.target.id==="modal")closeModal();};
 document.onkeydown=event=>{if(event.key==="Escape"){if(!$("#modal").hidden)closeModal();else if(!$("#territoryPanel").hidden)closeTerritory();else if(!$("#discoveryPanel").hidden)closeDiscovery();else if(!views.scene.hidden)show("journey");}if(!views.scene.hidden&&["ArrowLeft","ArrowRight"].includes(event.key)){event.preventDefault();event.key==="ArrowLeft"?goPrevious():goNext();}};
+const audit=auditPionero({content:CONTENT,history:HISTORY,territory:TERRITORY});
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
-window.PIONERO={history,queries,territory,validation,version:"0.4.0"};renderEras();
+if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
+window.PIONERO={history,queries,territory,validation,audit,version:"0.4.0"};
+save();
+renderEras();
