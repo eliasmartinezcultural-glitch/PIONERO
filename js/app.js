@@ -16,6 +16,8 @@ import {createComparisonEngine} from "./experience/comparison.js";
 import {createFocusController} from "./experience/focus.js";
 import {createExperienceState} from "./core/state.js";
 import {createSmokeSuite} from "./core/smoke.js";
+import {mediaFor} from "./media/catalog.js";
+import {routesForEra} from "./experience/routes.js";
 
 const $=selector=>document.querySelector(selector);
 const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
@@ -114,6 +116,12 @@ function renderPoints(){
   $("#sceneHint").textContent=discoveryHint(era.id);updateSceneNavigation();updateProgress();
 }
 function resolveEntity(point){const ref=history.getAny(point.entityId);return ref?{...ref.item,__type:ref.type}:null;}
+function renderRoute(eraId){
+  const routes=routesForEra(eraId);
+  if(!routes.length)return "";
+  const route=routes[0];
+  return '<div class="route-note"><b>Recorrido</b><span>'+esc(route.title)+'</span><small>'+esc(route.steps.join(" → "))+'</small></div>';
+}
 function renderEntity(entity){
   if(!entity)return "<p>Registro histórico no encontrado.</p>";
   const sources=queries.sourcesFor(entity),related=queries.relatedEntities(entity.__type,entity.id);
@@ -127,7 +135,7 @@ function discover(pointId){
   if(Number.isFinite(point.x)&&Number.isFinite(point.y))focus.focus(point.x,point.y,1);
   temporalRenderer.render(era.id,null,experienceCamera.read());
   const resolved=resolveEntity(point),panel=$("#discoveryPanel");
-  panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir explorando</button>';
+  panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+renderRoute(era.id)+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir</button>';
   state.openPanel("discovery");$("#closeDiscovery").onclick=()=>state.closePanel();renderPoints();panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function renderTerritory(){
@@ -158,8 +166,8 @@ function renderPanels(){
   if(panel==="territory")$("#territoryPanel").hidden=false;
 }
 function openSources(){
-  const all=history.all("sources"),pending=queries.researchQueue();
-  $("#sourceContent").innerHTML='<p>PIONERO separa lo documentado de la reconstrucción didáctica. Las fuentes están vinculadas a los registros históricos y su estado de investigación.</p><div class="source-summary"><span>'+all.length+' fuentes registradas</span><span>'+pending.length+' registros por completar</span></div><ul class="source-list">'+all.map(source=>'<li><b>'+esc(source.title)+'</b><small>'+esc(statusLabel[source.status]||source.status)+' · '+esc(source.type)+'</small><a href="'+esc(source.url)+'" target="_blank" rel="noopener noreferrer">Abrir fuente →</a></li>').join("")+'</ul>';
+  const all=history.all("sources"),pending=queries.researchQueue(),refs=mediaFor("visualReferences");
+  $("#sourceContent").innerHTML='<p>PIONERO separa evidencia histórica de reconstrucción visual. Las imágenes de referencia no se presentan como fotografías históricas.</p><div class="source-summary"><span>'+all.length+' fuentes</span><span>'+pending.length+' pendientes</span></div><ul class="source-list">'+all.map(source=>'<li><b>'+esc(source.title)+'</b><small>'+esc(statusLabel[source.status]||source.status)+' · '+esc(source.type)+'</small><a href="'+esc(source.url)+'" target="_blank" rel="noopener noreferrer">Abrir fuente →</a></li>').join("")+'</ul><div class="visual-reference-grid">'+refs.map(ref=>'<article class="visual-reference"><img src="'+esc(ref.image)+'" alt="" loading="lazy"><div><b>'+esc(ref.title)+'</b><small>REFERENCIA · '+esc(ref.evidence)+'</small><p>'+esc(ref.use)+'</p><a href="'+esc(ref.url)+'" target="_blank" rel="noopener noreferrer">Ver origen →</a></div></article>').join("")+'</div>';
   $("#modal").hidden=false;$("#closeModal").focus();
 }
 function closeModal(){$("#modal").hidden=true;}
@@ -168,11 +176,11 @@ function goPrevious(){const eras=history.all("eras"),era=currentEra(),i=era?eras
 function goNext(){const eras=history.all("eras"),era=currentEra(),i=era?eras.findIndex(item=>item.id===era.id):-1;if(i>=0&&i<eras.length-1)travel(eras[i+1].id);}
 function discoverNext(){const era=currentEra();if(!era)return;const next=(CONTENT.points[era.id]||[]).find(point=>!state.isVisited(era.id,point.id));if(next)discover(next.id);}
 
-$("#startButton").onclick=()=>state.setView("journey");
-$("#backToJourney").onclick=()=>state.setView("journey");
+$("#startButton").onclick=()=>travel("before-1973");
+$("#backToJourney").onclick=()=>state.setView("welcome");
 $("#previousEra").onclick=goPrevious;$("#nextEra").onclick=goNext;
 $("#timeBack").onclick=()=>goTemporal(-1);$("#timeForward").onclick=()=>goTemporal(1);$("#discoverButton").onclick=discoverNext;
-$("#territoryButton").onclick=openTerritory;$("#closeTerritory").onclick=()=>state.closePanel();$("#compareButton").onclick=compare;
+$("#closeTerritory").onclick=()=>state.closePanel();
 $("#sourceButton").onclick=openSources;$("#sourceButtonScene").onclick=openSources;$("#closeModal").onclick=closeModal;
 $("#modal").onclick=event=>{if(event.target.id==="modal")closeModal();};
 
