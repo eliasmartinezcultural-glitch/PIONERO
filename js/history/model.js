@@ -1,5 +1,5 @@
 export const HISTORY={
-  version:"0.4.0",
+  version:"0.4.1",
   eras:[
     {id:"before-1973",label:"ANTES DE 1973",title:"El territorio antes del pueblo",status:"partial"},
     {id:"1968",label:"1968",title:"Comienza una nueva etapa productiva",status:"partial"},
