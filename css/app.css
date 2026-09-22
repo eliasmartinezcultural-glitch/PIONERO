@@ -83,3 +83,14 @@
   .visual-reference{grid-template-columns:1fr}
   .visual-reference img{width:100%;height:150px}
 }
+
+
+/* PIONERO · PAISAJE BASE DOCUMENTALMENTE ORIENTADO */
+.scene-meseta,.scene-barda,.scene-monte{position:absolute;inset:0;pointer-events:none;transition:opacity 900ms ease,transform 900ms ease}
+.scene-meseta{z-index:2;opacity:calc(.18 + var(--meseta-strength)*.48);background:linear-gradient(180deg,transparent 48%,rgba(82,73,58,.22) 49%,rgba(68,61,49,.52) 68%,rgba(47,43,37,.72) 100%);clip-path:polygon(0 54%,14% 51%,28% 53%,41% 48%,56% 51%,72% 47%,86% 50%,100% 46%,100% 100%,0 100%)}
+.scene-barda{z-index:3;opacity:calc(.08 + var(--barda-strength)*.58);background:linear-gradient(170deg,transparent 55%,rgba(108,91,68,.55) 56%,rgba(62,55,45,.7) 72%,transparent 73%);clip-path:polygon(0 58%,18% 54%,35% 61%,51% 53%,67% 58%,82% 52%,100% 57%,100% 76%,0 76%)}
+.scene-monte{z-index:4;opacity:calc(.05 + var(--monte-strength)*.42);background-image:radial-gradient(circle at 12% 72%,rgba(48,55,39,.7) 0 1px,transparent 2px),radial-gradient(circle at 28% 78%,rgba(48,55,39,.6) 0 1px,transparent 2px),radial-gradient(circle at 44% 70%,rgba(48,55,39,.7) 0 1px,transparent 2px),radial-gradient(circle at 61% 79%,rgba(48,55,39,.6) 0 1px,transparent 2px),radial-gradient(circle at 78% 71%,rgba(48,55,39,.7) 0 1px,transparent 2px),radial-gradient(circle at 92% 78%,rgba(48,55,39,.6) 0 1px,transparent 2px);background-size:150px 95px}
+.scene[data-phase="riego"] .scene-monte,.scene[data-phase="fundacion"] .scene-monte,.scene[data-phase="instituciones"] .scene-monte,.scene[data-phase="comunidad"] .scene-monte,.scene[data-phase="presente"] .scene-monte{opacity:calc(.03 + var(--monte-strength)*.28)}
+.scene-world .scene-meseta,.scene-world .scene-barda,.scene-world .scene-monte{will-change:opacity,transform}
+@media(max-width:700px){.scene-meseta,.scene-barda,.scene-monte{transition:none}}
+@media(prefers-reduced-motion:reduce){.scene-meseta,.scene-barda,.scene-monte{transition:none!important}}
