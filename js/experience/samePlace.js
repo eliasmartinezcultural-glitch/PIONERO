@@ -1,9 +1,9 @@
-export function createSamePlaceEngine({history,territory,camera}){
+export function createSamePlaceEngine({territory,camera}){
   const anchors=new Map();
 
-  function register(id,{title,nodeIds=[],description=""}={}){
+  function register(id,{title="",nodeIds=[],description=""}={}){
     if(!id)return false;
-    anchors.set(id,{id,title:id,...{title},nodeIds:[...nodeIds],description});
+    anchors.set(id,{id,title,nodeIds:[...nodeIds],description});
     return true;
   }
 
@@ -24,7 +24,7 @@ export function createSamePlaceEngine({history,territory,camera}){
     if(!item)return false;
     const node=item.nodeIds.map(nodeId=>territory.node(nodeId)).find(node=>node?.eraIds?.includes(eraId));
     if(!node)return false;
-    camera.set({focusX:node.x,focusY:node.y});
+    camera.focus(node.x,node.y,camera.read().zoom);
     return {anchor:item,node:{...node},eraId};
   }
 
