@@ -52,7 +52,7 @@ const scene={
   styles:{}
 };
 const renderer=createTemporalRenderer(scene);
-const world=createExperienceWorld({history,content:CONTENT,territory,temporalRenderer:renderer,camera});
+const world=createExperienceWorld({history:registry,content:CONTENT,territory,temporalRenderer:renderer,camera});
 assert.equal(world.eraIndex("1973"),3);
 assert.equal(world.adjacent("1973",1),"1974");
 assert.equal(world.snapshot("1973").era.id,"1973");
