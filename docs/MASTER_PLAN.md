@@ -1,6 +1,6 @@
 # PIONERO — PLAN MAESTRO CENTRAL
 
-> **V0.4.0 — MOTOR TERRITORIAL ACTIVO**
+> **V0.4.0 — MOTOR TERRITORIAL ACTIVO · X5 AUDITADO**
 >
 > Regla: **COMPLEJO PARA CONSTRUIR → SIMPLE PARA USAR.**
 
@@ -71,7 +71,7 @@ Educación.
 ## V1.0
 Experiencia histórica completa.
 
-### DEFINICIÓN DE TERMINADO
+### AUDITORÍA X5\nAntes de avanzar a V0.5, el sistema debe poder detectar automáticamente:\n- versiones internas desalineadas;\n- eras sin escena o huellas;\n- huellas con entidades inexistentes o coordenadas inválidas;\n- nodos territoriales con capas, lugares o eras inexistentes;\n- conexiones territoriales rotas;\n- IDs HTML duplicados o elementos estructurales ausentes.\n\nLa auditoría vive en `js/core/audit.js` y queda expuesta en `window.PIONERO.audit`.\n\n### DEFINICIÓN DE TERMINADO
 **integrado · funcional · validado · curado · documentado · preparado para la siguiente**.
 
 No se declara cerrado por cantidad de código.
