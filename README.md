@@ -12,7 +12,7 @@ No se trabaja con parches aislados, remiendos, duplicaciones ni regresiones. Cad
 
 ### ESTADO
 
-**V0.4.0 — MOTOR HISTÓRICO + MOTOR TERRITORIAL**
+**V0.4.0 — MOTOR HISTÓRICO + MOTOR TERRITORIAL · X5 AUDITADO**
 
 PIONERO ahora conecta dos dimensiones de la historia:
 
@@ -27,7 +27,7 @@ Archivos:
 - `js/territory/model.js`
 - `js/territory/queries.js`
 
-La representación actual es deliberadamente **esquemática y no está a escala**. No debe interpretarse como cartografía catastral ni como coordenadas geográficas exactas.
+La representación actual es deliberadamente **esquemática y no está a escala**. El arranque ejecuta además una auditoría estructural que comprueba versiones, referencias históricas, huellas, nodos territoriales, conexiones y contrato mínimo de interfaz antes de exponer el estado del sistema. No debe interpretarse como cartografía catastral ni como coordenadas geográficas exactas.
 
 La capa territorial puede crecer hacia:
 - lugares históricos;
