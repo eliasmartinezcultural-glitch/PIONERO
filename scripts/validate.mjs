@@ -22,7 +22,7 @@ const queries=createHistoryQueries(registry);
 const territory=createTerritoryQueries(TERRITORY);
 const validation=validateHistory(HISTORY);
 const audit=auditPionero({content:CONTENT,history:HISTORY,territory:TERRITORY});
-const smoke=createSmokeSuite({history,territory,validation,audit,createState:createExperienceState,content:CONTENT}).run();
+const smoke=createSmokeSuite({history:registry,territory,validation,audit,createState:createExperienceState,content:CONTENT}).run();
 
 assert.equal(validation.valid,true,"La validación histórica falló: "+JSON.stringify(validation.issues));
 assert.equal(audit.valid,true,"La auditoría estructural falló: "+JSON.stringify(audit.issues));
