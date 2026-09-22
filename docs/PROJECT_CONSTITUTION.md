@@ -756,3 +756,103 @@ No se cambia silenciosamente la idea central.
 **REGLA: LA HISTORIA SE DESCUBRE EN EL TERRITORIO**
 
 **PRINCIPIO: COMPLEJO PARA CONSTRUIR → SIMPLE PARA USAR**
+
+---
+
+## 31. CONSTITUCIÓN OPERATIVA — PROFUNDIDAD INTERNA / SIMPLICIDAD EXTERNA
+
+Esta regla queda **BLOQUEADA** como criterio transversal de arquitectura.
+
+### INTERIOR: MUCHA ESTRUCTURA
+
+PIONERO debe poder crecer mediante sistemas separados y coordinados para:
+
+- estado;
+- navegación;
+- cámara;
+- tiempo;
+- escenas;
+- territorio;
+- lugares ancla;
+- continuidad espacial;
+- comparación;
+- evidencia;
+- fuentes;
+- medios;
+- descubrimientos;
+- accesibilidad;
+- validación;
+- auditoría.
+
+Cada motor debe tener una responsabilidad clara y una API pequeña. Los motores no deben duplicar información ni crear estados paralelos.
+
+### EXTERIOR: MUCHA SIMPLICIDAD
+
+El usuario no debe conocer la arquitectura interna.
+
+En cada momento la experiencia debe responder visualmente a sólo tres preguntas:
+
+1. ¿Dónde estoy?
+2. ¿En qué momento estoy?
+3. ¿Qué puedo hacer ahora?
+
+La acción principal debe ser evidente. Las acciones secundarias deben permanecer subordinadas al territorio.
+
+### PRINCIPIO DE COMPRESIÓN
+
+**Complejidad del sistema ↑ / complejidad percibida ↓**
+
+Agregar estructura interna no autoriza a agregar controles visibles.
+
+Si una capacidad puede resolverse automáticamente por el motor, no se convierte en un botón.
+
+### CONTRATO DEL MOTOR DE EXPERIENCIA
+
+El Experience World coordina los motores sin convertirse en una nueva fuente histórica.
+
+Debe poder producir una instantánea coherente de:
+
+**MOMENTO + ESCENA + ESTADO VISUAL + HUELLAS + TERRITORIO + CÁMARA**
+
+La historia continúa viviendo en HISTORY; el contenido de presentación continúa viviendo en CONTENT.
+
+### CÁMARA COMO ESTADO
+
+La cámara pertenece al estado de la experiencia y puede conservar conceptualmente:
+
+**foco + zoom + orientación**
+
+La interfaz puede cambiar de época sin perder innecesariamente la mirada del usuario.
+
+### CONTINUIDAD ESPACIAL
+
+Un lugar puede convertirse en un **ancla temporal**.
+
+El ancla identifica el mismo lugar conceptual a través de diferentes momentos sin inventar coordenadas históricas.
+
+### COMPARACIÓN COMO MOTOR
+
+La comparación no es una página independiente. Es una capacidad del territorio.
+
+Primero se verifica:
+
+**MISMO LUGAR + REFERENCIA ESPACIAL SUFICIENTE**
+
+y sólo después se habilita una comparación visual.
+
+Si falta evidencia, el sistema conserva el estado PENDIENTE en lugar de fabricar una comparación.
+
+### REGLA DE NO ESPECTÁCULO
+
+Una transición, animación, reconstrucción o efecto de cámara nunca puede comunicar mayor certeza histórica que la evidencia disponible.
+
+---
+
+## 32. REGLA DE EVOLUCIÓN
+
+Cada nueva capa debe aumentar una de estas capacidades:
+
+**COMPRENDER → UBICAR → VIAJAR → DESCUBRIR → COMPARAR**
+
+Si una propuesta no mejora ninguna de ellas, no entra al núcleo de PIONERO.
+
