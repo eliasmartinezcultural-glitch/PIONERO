@@ -150,3 +150,44 @@ Se avanza cuando la capa anterior está estructuralmente cerrada.
 La próxima validación profesional debe ser de ejecución real en navegador: carga, recorrido completo de las 7 eras, descubrimientos, territorio, comparación, fuentes, teclado, Escape, persistencia y pantalla pequeña.
 
 No se declara superada esa prueba hasta ejecutarla realmente.
+## CONSTITUCIÓN MUNDIAL DE LA EXPERIENCIA
+
+**BLOQUEADA — VIGENTE**
+
+El documento rector es `docs/PROJECT_CONSTITUTION.md`.
+
+PIONERO queda definido como una **máquina del tiempo territorial interactiva sobre San Patricio del Chañar**.
+
+### Núcleo innegociable
+
+**TIEMPO + TERRITORIO + CÁMARA + TRANSFORMACIÓN + COMPARACIÓN**
+
+El usuario no debe simplemente seleccionar un año para leer una ficha. Al cambiar de época, el estado visual del territorio debe poder transformarse coordinadamente: relieve representado, agua, producción, caminos, asentamiento, edificios, hitos, medios y puntos de vista, siempre según evidencia disponible.
+
+### Mecánicas visuales objetivo
+
+- mismo lugar en distintas épocas;
+- comparación fade;
+- comparación swipe;
+- spyglass;
+- side-by-side;
+- morphing cuando la evidencia lo permita;
+- puntos de vista históricos;
+- capas temporales;
+- transiciones de territorio;
+- reconstrucciones visuales diferenciadas de la evidencia;
+- evolución futura hacia terreno, 3D, 360° y WebXR.
+
+### Regla de dirección
+
+**La interfaz acompaña al territorio. No compite con él.**
+
+La experiencia debe sentirse como documental + viaje temporal + atlas vivo + memoria local + exploración.
+
+### Investigación de referencia
+
+El diseño se inspira conceptualmente en sistemas profesionales que demuestran navegación temporal, comparación espacial, capas sensibles al tiempo, reconstrucción de patrimonio y experiencias inmersivas. Las referencias sirven para aprender patrones, no para copiar productos.
+
+### Nueva prioridad de desarrollo
+
+Antes de ampliar contenido o agregar funciones secundarias, la evolución visual debe concentrarse en construir el **núcleo temporal-territorial**: estado temporal, transformación visual, cámara, comparación y continuidad espacial.
