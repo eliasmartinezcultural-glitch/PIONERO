@@ -41,7 +41,14 @@
     <button id="sourceButtonScene" class="icon-button">Fuentes</button>
   </div>
   <div id="scene" class="scene">
-    <div class="scene-sky"></div><div class="scene-atmosphere"></div><div class="scene-vignette"></div><div class="scene-horizon"></div><div class="scene-sun"></div><div class="scene-hills"></div><div class="scene-ground"></div><div class="scene-road"></div>
+    <div class="scene-sky"></div><div class="scene-atmosphere"></div><div class="scene-vignette"></div><div class="scene-horizon"></div><div class="scene-sun"></div><div class="scene-hills"></div><div class="scene-ground"></div><div class="scene-relief"></div><div class="scene-water"></div><div class="scene-production"></div><div class="scene-settlement"></div><div class="scene-road"></div>
+    <div class="temporal-badge" aria-live="polite"><span id="temporalPhase">VIAJE TEMPORAL</span><b id="temporalLabel">—</b></div>
+    <div class="temporal-controls">
+      <button id="timeBack" class="time-control" aria-label="Viajar al momento anterior">←</button>
+      <div class="time-track"><div id="timeProgress" class="time-progress"></div><div id="timeStops" class="time-stops"></div></div>
+      <button id="timeForward" class="time-control" aria-label="Viajar al momento siguiente">→</button>
+    </div>
+    <div class="scene-mode"><span>RECONSTRUCCIÓN VISUAL ESQUEMÁTICA</span><span id="temporalIndex">01 / 07</span></div>
     <div class="scene-object object-a"></div><div class="scene-object object-b"></div>
     <div id="memoryPoints" class="memory-points"></div>
     <div class="scene-caption"><span id="scenePlace"></span><span id="sceneStatus"></span></div><div class="scene-time-mark" aria-hidden="true">PIONERO</div>
