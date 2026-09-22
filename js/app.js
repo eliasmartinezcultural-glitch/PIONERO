@@ -188,7 +188,7 @@ document.onkeydown=event=>{
   if(event.key==="Escape"){
     if(!$("#modal").hidden){closeModal();return;}
     if(state.read().openPanel){state.closePanel();return;}
-    if(state.read().view==="scene"){state.setView("journey");return;}
+    if(state.read().view==="scene"){state.setView("welcome");return;}
     
   }
   if(state.read().view==="scene"&&!state.read().openPanel&&["ArrowLeft","ArrowRight"].includes(event.key)){
