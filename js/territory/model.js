@@ -1,5 +1,5 @@
 export const TERRITORY={
-  version:"0.4.0",
+  version:"0.4.1",
   mode:"schematic",
   title:"El territorio",
   description:"Una representación didáctica para entender relaciones espaciales. No es un mapa catastral ni reproduce coordenadas geográficas.",
