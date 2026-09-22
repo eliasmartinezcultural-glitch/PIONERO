@@ -85,7 +85,7 @@ function renderEntity(entity){
 }
 function discover(pointId){
   const era=currentEra(),point=(CONTENT.points[era?.id]||[]).find(item=>item.id===pointId);if(!era||!point)return;
-  state.visit(era.id+":"+point.id);
+  state.visit(era.id,point.id);
   const resolved=resolveEntity(point),panel=$("#discoveryPanel");
   panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir explorando</button>';
   state.openPanel("discovery");$("#closeDiscovery").onclick=()=>state.closePanel();renderPoints();panel.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -150,5 +150,5 @@ const audit=auditPionero({content:CONTENT,history:HISTORY,territory:TERRITORY});
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
 state.subscribe(snapshot=>{renderView();renderPanels();if(snapshot.view==="scene"&&snapshot.eraId){renderTimeline(snapshot.eraId);renderPoints();}});
-window.PIONERO={history,queries,territory,validation,audit,state,version:"0.4.1"};
-renderEras();renderView();renderPanels();
+window.PIONERO={history,queries,territory,validation,audit,state,version:"0.4.1",ready:false};
+renderEras();renderView();renderPanels();window.PIONERO.ready=true;
