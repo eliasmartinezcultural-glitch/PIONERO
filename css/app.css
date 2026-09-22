@@ -54,3 +54,12 @@
 @media(prefers-reduced-motion:reduce){
   .scene-sky,.scene-hills,.scene-ground,.scene-relief,.scene-water,.scene-production,.scene-settlement,.scene-road,.time-progress{transition:none!important}
 }
+
+
+/* PIONERO · EXPERIENCE WORLD / UI SEPARATION */
+.scene{--camera-x:50;--camera-y:50;--camera-zoom:1;--camera-angle:0}
+.scene-world{position:absolute;inset:0;overflow:hidden;transform:scale(var(--camera-zoom));transform-origin:calc(var(--camera-x)*1%) calc(var(--camera-y)*1%);transition:transform 700ms cubic-bezier(.2,.8,.2,1)}
+.scene-world .scene-sky,.scene-world .scene-atmosphere,.scene-world .scene-vignette,.scene-world .scene-horizon,.scene-world .scene-sun,.scene-world .scene-hills,.scene-world .scene-ground,.scene-world .scene-relief,.scene-world .scene-water,.scene-world .scene-production,.scene-world .scene-settlement,.scene-world .scene-road,.scene-world .scene-object{will-change:transform}
+.scene[data-phase="presente"] .scene-world{filter:saturate(1.03)}
+@media(max-width:700px){.scene-world{transition:none}}
+@media(prefers-reduced-motion:reduce){.scene-world{transition:none!important}}
