@@ -4,7 +4,7 @@ import {createHistoryRegistry} from "./history/registry.js";
 import {createHistoryQueries} from "./history/queries.js";
 import {validateHistory} from "./history/validate.js";
 import {TERRITORY} from "./territory/model.js";
-import {createTerritoryQueries} from "./territory/queries.js";
+import {createTerritoryQueries} from "./territory/queries.js";\nimport {auditPionero} from "./core/audit.js";
 
 const $=selector=>document.querySelector(selector);
 const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
@@ -19,8 +19,17 @@ const kindLabel={documented:"DOCUMENTADO",testimony:"TESTIMONIO",reconstruction:
 const statusLabel={verified:"VERIFICADO",partial:"PARCIAL",pending:"PENDIENTE"};
 
 function esc(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
-function save(){localStorage.setItem(KEY,JSON.stringify([...visited]));updateProgress();}
-function updateProgress(){const total=Object.values(CONTENT.points).reduce((sum,points)=>sum+points.length,0);$("#progress").textContent=visited.size+" / "+total+" huellas";}
+function save(){
+  const validKeys=new Set(Object.entries(CONTENT.points).flatMap(([eraId,points])=>points.map(point=>eraId+":"+point.id)));
+  visited=new Set([...visited].filter(key=>validKeys.has(key)));
+  localStorage.setItem(KEY,JSON.stringify([...visited]));
+  updateProgress();
+}
+function updateProgress(){
+  const total=Object.values(CONTENT.points).reduce((sum,points)=>sum+points.length,0);
+  const completed=Math.min(visited.size,total);
+  $("#progress").textContent=completed+" / "+total+" huellas";
+}
 function show(name){Object.entries(views).forEach(([key,view])=>view.hidden=key!==name);$("#experience").focus({preventScroll:true});window.scrollTo({top:0,behavior:"smooth"});}
 function renderTimeline(activeId=null){
   const rail=$("#timelineRail");
@@ -59,7 +68,7 @@ function discover(pointId){
   const point=(CONTENT.points[currentEra.id]||[]).find(item=>item.id===pointId);if(!point)return;
   visited.add(currentEra.id+":"+point.id);save();const resolved=resolveEntity(point),panel=$("#discoveryPanel");
   panel.innerHTML=renderEntity(resolved||{title:point.title,evidence:point.kind,status:"pending",description:point.text})+'<p class="point-note">'+esc(point.text||"")+'</p><button id="closeDiscovery" class="secondary-button">Seguir explorando</button>';
-  panel.hidden=false;$("#closeDiscovery").onclick=()=>panel.hidden=true;panel.scrollIntoView({behavior:"smooth",block:"nearest"});renderPoints();
+  panel.hidden=false;$("#closeDiscovery").onclick=closeDiscovery;panel.scrollIntoView({behavior:"smooth",block:"nearest"});renderPoints();
 }
 function renderTerritory(){
   if(!currentEra)return;
@@ -80,7 +89,7 @@ function showTerritoryNode(id){
   $("#territoryInfo").innerHTML='<div class="panel-meta">'+esc(layer?.label||"TERRITORIO")+'</div><h4>'+esc(node.title)+'</h4><p>'+esc(place?.description||"")+'</p><p class="point-note">Referencia espacial esquemática. La ubicación visual no pretende sustituir una cartografía documental.</p>';
 }
 function openTerritory(){renderTerritory();$("#territoryPanel").hidden=false;$("#territoryPanel").scrollIntoView({behavior:"smooth",block:"nearest");}
-function closeTerritory(){$("#territoryPanel").hidden=true;}
+function closeTerritory(){$("#territoryPanel").hidden=true;}\nfunction closeDiscovery(){$("#discoveryPanel").hidden=true;}
 function compare(){
   if(!currentEra)return;
   const events=queries.eventsByEra(currentEra.id),evidence=events.length?events.map(event=>event.title).join(" · "):"Sin eventos registrados para esta etapa.";
@@ -96,6 +105,6 @@ function closeModal(){$("#modal").hidden=true;}
 function goPrevious(){const eras=history.all("eras"),i=eraIndex();if(i>0)travel(eras[i-1].id);}
 function goNext(){const eras=history.all("eras"),i=eraIndex();if(i>=0&&i<eras.length-1)travel(eras[i+1].id);}
 $("#startButton").onclick=()=>show("journey");$("#backToJourney").onclick=()=>show("journey");$("#previousEra").onclick=goPrevious;$("#nextEra").onclick=goNext;$("#discoverButton").onclick=()=>currentEra&&CONTENT.points[currentEra.id]?.[0]&&discover(CONTENT.points[currentEra.id][0].id);$("#territoryButton").onclick=openTerritory;$("#closeTerritory").onclick=closeTerritory;$("#compareButton").onclick=compare;$("#sourceButton").onclick=openSources;$("#sourceButtonScene").onclick=openSources;$("#closeModal").onclick=closeModal;$("#modal").onclick=event=>{if(event.target.id==="modal")closeModal();};
-document.onkeydown=event=>{if(event.key==="Escape"){if(!$("#modal").hidden)closeModal();else if(!$("#territoryPanel").hidden)closeTerritory();else if(!views.scene.hidden)show("journey");}if(!views.scene.hidden&&["ArrowLeft","ArrowRight"].includes(event.key)){event.preventDefault();event.key==="ArrowLeft"?goPrevious():goNext();}};
+document.onkeydown=event=>{if(event.key==="Escape"){if(!$("#modal").hidden)closeModal();else if(!$("#territoryPanel").hidden)closeTerritory();else if(!$("#discoveryPanel").hidden)closeDiscovery();else if(!views.scene.hidden)show("journey");}if(!views.scene.hidden&&["ArrowLeft","ArrowRight"].includes(event.key)){event.preventDefault();event.key==="ArrowLeft"?goPrevious():goNext();}};
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 window.PIONERO={history,queries,territory,validation,version:"0.4.0"};renderEras();
