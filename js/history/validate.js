@@ -17,7 +17,7 @@ export function validateHistory(model){
       if(item.id)local.add(item.id);
 
       if(item.id&&globalIds.has(item.id))issues.push({level:"error",type,id:item.id,message:"id duplicado globalmente con "+globalIds.get(item.id)});
-      else if(item.id)globalIds.set(item.id,type);
+      else if(item.id)globalIds.set(type+":"+item.id,type);
 
       for(const field of required)if(item[field]===undefined||item[field]===null||item[field]==="")issues.push({level:"error",type,id:item.id,message:"campo obligatorio ausente: "+field});
 
@@ -40,8 +40,9 @@ export function validateHistory(model){
     if(relation.id&&globalIds.has(relation.id))issues.push({level:"error",type:"relation",id:relation.id,message:"id de relación colisiona con entidad"});
     if(!RELATION_TYPES.includes(relation.type))issues.push({level:"error",type:"relation",id:relation.id,message:"tipo de relación inválido: "+relation.type});
     for(const side of [relation.from,relation.to]){
-      if(!side||!ENTITY_TYPES.includes(side.type)||!globalIds.has(side.id))
-        issues.push({level:"error",type:"relation",id:relation.id,message:"referencia inexistente o inválida"});
+      const key=side&&ENTITY_TYPES.includes(side.type)?side.type+":"+side.id:"";
+      if(!side||!ENTITY_TYPES.includes(side.type)||!globalIds.has(key))
+        issues.push({level:"error",type:"relation",id:relation.id,message:"referencia inexistente o inválida: "+key});
     }
   }
 
