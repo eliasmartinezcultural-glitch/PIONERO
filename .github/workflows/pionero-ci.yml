@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          find js scripts -type f -name "*.js" -o -name "*.mjs" | while read -r file; do
+          find js scripts -type f \( -name "*.js" -o -name "*.mjs" \) | while read -r file; do
             node --check "$file"
           done
       - name: Validación PIONERO
