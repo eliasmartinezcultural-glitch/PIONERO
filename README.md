@@ -10,6 +10,24 @@ Experiencia interactiva de Ocarina Producciones.
 
 No se trabaja con parches aislados, remiendos, duplicaciones ni regresiones. Cada avance debe quedar integrado, funcional, validado y preparado para el siguiente.
 
+### CONSTITUCIÓN MUNDIAL — BLOQUEADA
+
+El documento rector del proyecto es `docs/PROJECT_CONSTITUTION.md`.
+
+Su principio central queda fijado:
+
+> **PIONERO no cuenta la historia de San Patricio del Chañar. PIONERO permite viajar por ella.**
+
+El núcleo visual y experiencial queda bloqueado como:
+
+**TIEMPO + TERRITORIO + CÁMARA + TRANSFORMACIÓN + COMPARACIÓN**
+
+El territorio es el protagonista. El tiempo es un estado del mundo, no un simple filtro. El objetivo es evolucionar desde la representación esquemática actual hacia una experiencia interactiva casi inmersiva de viaje temporal, siempre subordinada a evidencia histórica.
+
+Patrones de referencia estudiados: Google Earth, OldMapsOnline/TimeMap, ArcGIS Time Maps y proyectos de patrimonio virtual como Via Appia Antica. Se incorporan principios, no copias de interfaces ni código propietario.
+
+Todo cambio conceptual que contradiga esta Constitución debe justificar explícitamente la desviación y actualizar primero el documento rector.
+
 ### ESTADO
 
 **V0.4.1 — NÚCLEO DE EXPERIENCIA + MOTOR HISTÓRICO + MOTOR TERRITORIAL · CONSOLIDACIÓN X5**
