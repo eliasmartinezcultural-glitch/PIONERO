@@ -6,6 +6,10 @@ import {validateHistory} from "./history/validate.js";
 import {TERRITORY} from "./territory/model.js";
 import {createTerritoryQueries} from "./territory/queries.js";
 import {auditPionero} from "./core/audit.js";
+import {getTemporalState} from "./experience/temporal.js";
+import {createTemporalTransition} from "./experience/transition.js";
+import {createExperienceCamera} from "./experience/camera.js";
+import {createTemporalRenderer} from "./experience/renderer.js";
 import {createExperienceState} from "./core/state.js";
 import {createSmokeSuite} from "./core/smoke.js";
 
@@ -16,6 +20,9 @@ const queries=createHistoryQueries(history);
 const territory=createTerritoryQueries(TERRITORY);
 const validation=validateHistory(HISTORY);
 const state=createExperienceState({eras:HISTORY.eras,content:CONTENT});
+const temporalTransition=createTemporalTransition({duration:820});
+const experienceCamera=createExperienceCamera();
+const temporalRenderer=createTemporalRenderer($(".scene"));
 const kindLabel={documented:"DOCUMENTADO",testimony:"TESTIMONIO",reconstruction:"RECONSTRUCCIÓN",interpretation:"INTERPRETACIÓN"};
 const statusLabel={verified:"VERIFICADO",partial:"PARCIAL",pending:"PENDIENTE"};
 
@@ -44,7 +51,18 @@ function renderEras(){
   grid.querySelectorAll("[data-era]").forEach(button=>button.onclick=()=>travel(button.dataset.era));
   renderTimeline();
 }
+function renderTemporalUI(eraId){
+  const eras=history.all("eras"),index=eras.findIndex(item=>item.id===eraId),visual=getTemporalState(eraId);
+  $("#temporalPhase").textContent=visual.phase.toUpperCase();
+  $("#temporalLabel").textContent=visual.label;
+  $("#temporalIndex").textContent=String(index+1).padStart(2,"0")+" / "+String(eras.length).padStart(2,"0");
+  $("#timeProgress").style.width=((index/(Math.max(1,eras.length-1)))*100)+"%";
+  $("#timeStops").innerHTML=eras.map((item,i)=>'<button class="time-stop '+(item.id===eraId?"is-active":"")+'" data-era="'+esc(item.id)+'" data-label="'+esc(item.label)+'" aria-label="Viajar a '+esc(item.label)+'" aria-current="'+(item.id===eraId?"step":"false")+'"></button>').join("");
+  $("#timeStops").querySelectorAll("[data-era]").forEach(button=>button.onclick=()=>travel(button.dataset.era));
+  temporalRenderer.render(eraId);
+}
 function travel(id){
+  const previous=state.read().eraId;
   if(!state.travel(id))return;
   const era=currentEra(),meta=CONTENT.scenes[id]||{};
   $("#scene").dataset.theme=meta.theme||"default";
@@ -53,7 +71,17 @@ function travel(id){
   $("#scenePlace").textContent="SAN PATRICIO DEL CHAÑAR";
   $("#sceneStatus").textContent=statusLabel[era.status]||String(era.status||"").toUpperCase();
   $("#sceneHint").textContent=discoveryHint(era.id);
+  renderTemporalUI(era.id);
   renderPoints();renderTimeline(era.id);updateSceneNavigation();renderView();
+  const overlay=document.querySelector(".temporal-transition")||document.createElement("div");
+  if(!overlay.parentNode){overlay.className="temporal-transition";$("#scene").appendChild(overlay);}
+  if(previous&&previous!==id){
+    overlay.classList.add("is-active");
+    temporalTransition.play({
+      onProgress:t=>temporalRenderer.transition(previous,id,t),
+      onComplete:()=>overlay.classList.remove("is-active")
+    });
+  }else temporalRenderer.render(id);
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function discoveryHint(eraId){
@@ -124,13 +152,15 @@ function openSources(){
   $("#modal").hidden=false;$("#closeModal").focus();
 }
 function closeModal(){$("#modal").hidden=true;}
+function goTemporal(delta){const eras=history.all("eras"),era=currentEra(),i=era?eras.findIndex(item=>item.id===era.id):-1;const target=i+delta;if(target>=0&&target<eras.length)travel(eras[target].id);}
 function goPrevious(){const eras=history.all("eras"),era=currentEra(),i=era?eras.findIndex(item=>item.id===era.id):-1;if(i>0)travel(eras[i-1].id);}
 function goNext(){const eras=history.all("eras"),era=currentEra(),i=era?eras.findIndex(item=>item.id===era.id):-1;if(i>=0&&i<eras.length-1)travel(eras[i+1].id);}
 function discoverNext(){const era=currentEra();if(!era)return;const next=(CONTENT.points[era.id]||[]).find(point=>!state.isVisited(era.id,point.id));if(next)discover(next.id);}
 
 $("#startButton").onclick=()=>state.setView("journey");
 $("#backToJourney").onclick=()=>state.setView("journey");
-$("#previousEra").onclick=goPrevious;$("#nextEra").onclick=goNext;$("#discoverButton").onclick=discoverNext;
+$("#previousEra").onclick=goPrevious;$("#nextEra").onclick=goNext;
+$("#timeBack").onclick=()=>goTemporal(-1);$("#timeForward").onclick=()=>goTemporal(1);$("#discoverButton").onclick=discoverNext;
 $("#territoryButton").onclick=openTerritory;$("#closeTerritory").onclick=()=>state.closePanel();$("#compareButton").onclick=compare;
 $("#sourceButton").onclick=openSources;$("#sourceButtonScene").onclick=openSources;$("#closeModal").onclick=closeModal;
 $("#modal").onclick=event=>{if(event.target.id==="modal")closeModal();};
@@ -152,5 +182,7 @@ const smokeSuite=createSmokeSuite({history,territory,territoryData:TERRITORY,val
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
 state.subscribe(snapshot=>{renderView();renderPanels();if(snapshot.view==="scene"&&snapshot.eraId){renderTimeline(snapshot.eraId);renderPoints();}});
-window.PIONERO={history,queries,territory,validation,audit,state,smoke:smokeSuite,version:"0.4.1",ready:false};
-renderEras();renderView();renderPanels();window.PIONERO.ready=true;
+window.PIONERO={history,queries,territory,validation,audit,state,smoke:smokeSuite,camera:experienceCamera,temporal:getTemporalState,version:"0.4.1",ready:false};
+renderEras();renderView();renderPanels();
+if(state.read().eraId){renderTemporalUI(state.read().eraId);temporalRenderer.render(state.read().eraId);}
+window.PIONERO.ready=true;
