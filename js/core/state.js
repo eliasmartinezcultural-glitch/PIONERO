@@ -27,7 +27,7 @@ export function createExperienceState({eras,content,storageKey="pionero.progress
     }
   }
   function setView(view){
-    if(!["welcome","journey","scene"].includes(view))return false;
+    if(!["welcome","scene"].includes(view))return false;
     state.view=view;state.openPanel=null;notify();return true;
   }
   function travel(eraId){
