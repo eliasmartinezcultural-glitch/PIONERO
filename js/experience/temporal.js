@@ -1,3 +1,5 @@
+import {reconstructionFor} from "../media/reconstruction.js";
+
 export const TEMPORAL_STATES = {
   "before-1973": {
     phase:"antecedentes",
@@ -37,12 +39,14 @@ export const TEMPORAL_STATES = {
 };
 
 export function getTemporalState(eraId){
-  return TEMPORAL_STATES[eraId] || TEMPORAL_STATES["present"];
+  const state=TEMPORAL_STATES[eraId] || TEMPORAL_STATES["present"];
+  return {...state,reconstruction:reconstructionFor(eraId)};
 }
 
 export function interpolateTemporalState(fromId,toId,t){
   const a=getTemporalState(fromId),b=getTemporalState(toId),n=Math.max(0,Math.min(1,Number(t)||0));
   return Object.fromEntries(Object.keys(a).map(key=>{
+    if(key==="reconstruction")return [key,n<0.5?a[key]:b[key]];
     if(typeof a[key]==="number"&&typeof b[key]==="number") return [key,a[key]+(b[key]-a[key])*n];
     return [key,n<0.5?a[key]:b[key]];
   }));
