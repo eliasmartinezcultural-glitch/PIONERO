@@ -11,6 +11,13 @@ export function createTemporalRenderer(scene){
     scene.style.setProperty("--production-strength",String(visual.production));
     scene.style.setProperty("--settlement-strength",String(visual.settlement));
     scene.style.setProperty("--road-strength",String(visual.roads));
+    const layers=visual.reconstruction?.layers||[];
+    const layerMap=Object.fromEntries(layers.map(layer=>[layer.id,layer.strength]));
+    scene.style.setProperty("--meseta-strength",String(layerMap.meseta??0));
+    scene.style.setProperty("--barda-strength",String(layerMap.barda??0));
+    scene.style.setProperty("--monte-strength",String(layerMap.monte??0));
+    scene.style.setProperty("--irrigation-strength",String(layerMap.irrigation??0));
+    scene.style.setProperty("--institutions-strength",String(layerMap.institutions??0));
     scene.style.setProperty("--camera-x",String(view.focusX));
     scene.style.setProperty("--camera-y",String(view.focusY));
     scene.style.setProperty("--camera-zoom",String(view.zoom));
