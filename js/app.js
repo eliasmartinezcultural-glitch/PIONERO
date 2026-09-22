@@ -20,7 +20,7 @@ import {mediaFor} from "./media/catalog.js";
 import {routesForEra} from "./experience/routes.js";
 
 const $=selector=>document.querySelector(selector);
-const views={welcome:$("#welcomeView"),journey:$("#journeyView"),scene:$("#sceneView")};
+const views={welcome:$("#welcomeView"),scene:$("#sceneView")};
 const history=createHistoryRegistry(HISTORY);
 const queries=createHistoryQueries(history);
 const territory=createTerritoryQueries(TERRITORY);
@@ -189,7 +189,7 @@ document.onkeydown=event=>{
     if(!$("#modal").hidden){closeModal();return;}
     if(state.read().openPanel){state.closePanel();return;}
     if(state.read().view==="scene"){state.setView("journey");return;}
-    if(state.read().view==="journey"){state.setView("welcome");return;}
+    
   }
   if(state.read().view==="scene"&&!state.read().openPanel&&["ArrowLeft","ArrowRight"].includes(event.key)){
     event.preventDefault();event.key==="ArrowLeft"?goPrevious():goNext();
