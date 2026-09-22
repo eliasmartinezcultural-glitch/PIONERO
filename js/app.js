@@ -16,7 +16,6 @@ const queries=createHistoryQueries(history);
 const territory=createTerritoryQueries(TERRITORY);
 const validation=validateHistory(HISTORY);
 const state=createExperienceState({eras:HISTORY.eras,content:CONTENT});
-const smoke=createSmokeSuite({history,territory,validation,audit:null,createState:createExperienceState,content:CONTENT});
 const kindLabel={documented:"DOCUMENTADO",testimony:"TESTIMONIO",reconstruction:"RECONSTRUCCIÓN",interpretation:"INTERPRETACIÓN"};
 const statusLabel={verified:"VERIFICADO",partial:"PARCIAL",pending:"PENDIENTE"};
 
