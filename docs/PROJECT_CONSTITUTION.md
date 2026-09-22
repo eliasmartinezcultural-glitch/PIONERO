@@ -856,3 +856,53 @@ Cada nueva capa debe aumentar una de estas capacidades:
 
 Si una propuesta no mejora ninguna de ellas, no entra al núcleo de PIONERO.
 
+
+
+## 47. SIMPLIFICACIÓN FUNCIONAL
+
+La experiencia visible queda reducida a cuatro acciones principales:
+
+**ENTRAR → VIAJAR → DESCUBRIR → VER FUENTES**
+
+El territorio, la comparación, las anclas, las rutas, los motores de evidencia y las futuras capacidades inmersivas permanecen como infraestructura interna hasta que puedan aparecer sin aumentar la carga cognitiva.
+
+No se agregan botones para demostrar que existe un motor.
+
+## 48. REFERENCIAS VISUALES PARA RECONSTRUCCIÓN
+
+Cuando no exista una fotografía histórica del lugar, PIONERO puede utilizar imágenes de paisajes morfológicamente similares como **referencias visuales** para una reconstrucción.
+
+Regla obligatoria:
+
+**REFERENCIA VISUAL ≠ EVIDENCIA HISTÓRICA**
+
+Una meseta de Santa Cruz puede ayudar a definir textura, horizonte, vegetación o luz; nunca puede presentarse como una fotografía de San Patricio del Chañar.
+
+## 49. PAISAJE BASE DEL CHÁÑAR HISTÓRICO
+
+La reconstrucción del período previo al desarrollo intensivo debe priorizar:
+
+**MESETA DESÉRTICA + BARDA + ESTEPA BAJA + RÍO + MONTE**
+
+y no:
+
+**DUNAS DE ARENA**.
+
+La referencia territorial consultada describe el valle inferior del río Neuquén como una hendidura longitudinal en la meseta desértica, con vegetación de estepa patagónica y arbustos bajos. La historia municipal describe las tierras adquiridas en 1968 como monte bruto.
+
+## 50. RECORRIDOS
+
+Los recorridos históricos no deben convertirse en otra navegación compleja.
+
+Internamente PIONERO podrá modelar:
+
+**LUGAR → LUGAR → TRANSFORMACIÓN**
+
+pero externamente mostrará, cuando corresponda, una única sugerencia de recorrido breve.
+
+Ejemplo:
+
+**campo → río → primeros cultivos**
+
+La función de recorrido existe para ayudar a comprender, no para crear otra interfaz.
+
