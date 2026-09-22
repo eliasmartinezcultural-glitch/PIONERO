@@ -14,6 +14,9 @@ import {createTemporalRenderer} from "../js/experience/renderer.js";
 import {createExperienceWorld} from "../js/experience/world.js";
 import {createSamePlaceEngine} from "../js/experience/samePlace.js";
 import {createComparisonEngine} from "../js/experience/comparison.js";
+import {reconstructionFor,reconstructionLayers} from "../js/media/reconstruction.js";
+import {mediaFor} from "../js/media/catalog.js";
+import {routesForEra} from "../js/experience/routes.js";
 
 const store=new Map();
 globalThis.localStorage={
@@ -63,6 +66,13 @@ const comparison=createComparisonEngine({samePlace});
 assert.equal(comparison.prepare({anchorId:"chanar",fromEraId:"1973",toEraId:"present",mode:"fade"}).status,"ready");
 assert.equal(comparison.prepare({anchorId:"chanar",fromEraId:"1973",toEraId:"present",mode:"invalid"}),null);
 
+for(const era of HISTORY.eras){
+  const reconstruction=reconstructionFor(era.id);
+  assert.ok(reconstruction.layers.length>=3,"Reconstrucción incompleta: "+era.id);
+  assert.ok(reconstructionLayers(era.id).every(layer=>layer.evidence&&layer.status),"Capa sin procedencia: "+era.id);
+  assert.ok(routesForEra(era.id).length>=1,"Ruta ausente: "+era.id);
+}
+assert.ok(mediaFor("visualReferences").length>=4);
 console.log("PIONERO EXPERIENCE CORE OK");
 
 console.log("PIONERO CI OK",JSON.stringify({version:HISTORY.version,eras:HISTORY.eras.length,points:smoke.summary.points}));
