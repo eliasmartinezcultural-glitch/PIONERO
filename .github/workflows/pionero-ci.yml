@@ -1,0 +1,28 @@
+name: PIONERO · Integridad
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Sintaxis JavaScript
+        shell: bash
+        run: |
+          set -e
+          find js scripts -type f -name "*.js" -o -name "*.mjs" | while read -r file; do
+            node --check "$file"
+          done
+      - name: Validación PIONERO
+        run: node scripts/validate.mjs
