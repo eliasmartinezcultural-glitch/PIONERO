@@ -24,7 +24,8 @@ export function createHistoryQueries(registry){
     mediaFor(entity){
       if(!entity)return [];
       const direct=(entity.mediaIds||[]).map(id=>registry.get("media",id)).filter(Boolean);
-      const related=this.relatedEntities(entity.__type||"",entity.id,"depicts").filter(Boolean);
+      const ref=entity.__type?{type:entity.__type,item:entity}:registry.getAny(entity.id);
+      const related=ref?this.relatedEntities(ref.type,entity.id,"depicts").filter(Boolean):[];
       return [...new Map([...direct,...related].map(item=>[item.id,item])).values()];
     }
   };
