@@ -148,7 +148,7 @@ document.onkeydown=event=>{
 };
 
 const audit=auditPionero({content:CONTENT,history:HISTORY,territory:TERRITORY});
-const smokeSuite=createSmokeSuite({history,territory,validation,audit,createState:createExperienceState,content:CONTENT});
+const smokeSuite=createSmokeSuite({history,territory,territoryData:TERRITORY,validation,audit,createState:createExperienceState,content:CONTENT});
 if(!validation.valid)console.error("PIONERO HISTORY VALIDATION",validation.issues);
 if(!audit.valid)console.error("PIONERO STRUCTURAL AUDIT",audit.issues);
 state.subscribe(snapshot=>{renderView();renderPanels();if(snapshot.view==="scene"&&snapshot.eraId){renderTimeline(snapshot.eraId);renderPoints();}});
