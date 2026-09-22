@@ -57,7 +57,7 @@ assert.equal(world.eraIndex("1973"),3);
 assert.equal(world.adjacent("1973",1),"1974");
 assert.equal(world.snapshot("1973").era.id,"1973");
 
-const samePlace=createSamePlaceEngine({history,territory,camera});
+const samePlace=createSamePlaceEngine({history:registry,territory,camera});
 assert.equal(samePlace.register("chanar",{title:"San Patricio del Chañar",nodeIds:["territory-chanar"]}),true);
 assert.equal(samePlace.findForEra("1973").length,1);
 assert.equal(samePlace.focus("chanar","1973").node.id,"territory-chanar");
