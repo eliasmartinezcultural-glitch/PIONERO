@@ -191,3 +191,35 @@ El diseño se inspira conceptualmente en sistemas profesionales que demuestran n
 ### Nueva prioridad de desarrollo
 
 Antes de ampliar contenido o agregar funciones secundarias, la evolución visual debe concentrarse en construir el **núcleo temporal-territorial**: estado temporal, transformación visual, cámara, comparación y continuidad espacial.
+
+## CAPA TRANSVERSAL ACTUAL — EXPERIENCE CORE
+
+La prioridad de V0.4.1 queda redefinida como **consolidación del núcleo de experiencia**, no acumulación de interfaz.
+
+Sistemas internos incorporados:
+
+- Experience World: coordina momento, escena, visual, huellas, territorio y cámara.
+- Camera State: la cámara pertenece al estado central de la experiencia.
+- Same Place: anclas conceptuales para mantener identidad espacial entre épocas.
+- Comparison Engine: prepara comparaciones sólo cuando existe referencia espacial suficiente.
+- Focus Controller: permite que el descubrimiento y el territorio puedan guiar la mirada sin crear controles adicionales.
+
+Regla de producto:
+
+**muchísima estructura interna + mínima carga cognitiva externa.**
+
+La interfaz visible no debe crecer al mismo ritmo que el motor.
+
+### CRITERIO DE CONSOLIDACIÓN
+
+Antes de agregar nuevas funciones, el núcleo debe demostrar:
+
+1. una sola fuente de verdad para estado;
+2. cámara persistente dentro del estado;
+3. continuidad temporal sin perder el contexto espacial;
+4. anclas de mismo lugar;
+5. comparación preparada por evidencia;
+6. render visual desacoplado de la interfaz;
+7. validación automática de los nuevos contratos;
+8. experiencia comprensible sin conocer la arquitectura.
+
