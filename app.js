@@ -344,4 +344,89 @@ $("#relations").onclick=event=>{const card=event.target.closest("[data-relation]
 $("#chains").onclick=event=>{const card=event.target.closest("[data-piece]");if(card)openPiece(card.dataset.piece);};
 $("#lab").onclick=event=>{const card=event.target.closest("[data-object]");if(card)openInvestigationObject(card.dataset.object);};
 document.addEventListener("keydown",event=>{if($("#journey").hidden)return;if(event.key==="ArrowRight")travel(state.eventIndex+1);if(event.key==="ArrowLeft")travel(state.eventIndex-1);if(event.key==="Escape"){if($("#modal").open)$("#modal").close();if(!$("#decision").hidden)$("#decision").hidden=true;}});
+
+/* V2.5 — RECONSTRUCCIÓN TERRITORIAL
+   El mapa no pretende ser una cartografía histórica exacta: es un mapa jugable
+   de relaciones apoyado en lugares y procesos que las fuentes sí permiten conectar.
+*/
+const TERRITORY_OBJECTS = [
+  {id:"river",title:"Río Neuquén",kind:"AGUA",x:79,y:18,desc:"El río es el soporte físico de la historia del riego. La fuente municipal vincula las primeras obras con captaciones sobre este curso.",source:"municipal",links:["irrigation","intake"]},
+  {id:"intakePlace",title:"Zona de bocatoma",kind:"OBRA",x:70,y:37,desc:"Punto narrativo para investigar la captación de agua. La posición es didáctica; no representa una coordenada histórica exacta.",source:"municipal",links:["intake","irrigation"]},
+  {id:"productiveValley",title:"Valle productivo",kind:"PRODUCCIÓN",x:39,y:68,desc:"La transformación del monte en superficie productiva es una de las claves del proceso iniciado a fines de los años 60.",source:"municipal",links:["gasparri","parcels","fruit"]},
+  {id:"townSite",title:"Casco urbano",kind:"PUEBLO",x:57,y:54,desc:"La fundación de 1973 marca una capa institucional; el asentamiento y la vida comunitaria se investigan como procesos relacionados, no como un único hecho.",source:"cfi",links:["foundation","commission","school"]},
+  {id:"barda",title:"Barda / meseta",kind:"TERRITORIO",x:20,y:25,desc:"La topografía ayuda a entender el contraste entre meseta, barda, valle irrigado y ribera que aparece en la documentación territorial.",source:"cfi",links:["territory"]},
+  {id:"roads",title:"Eje de acceso",kind:"CIRCULACIÓN",x:30,y:48,desc:"La estructura actual del territorio se articula con rutas y caminos; en PIONERO funcionan como referencia espacial, no como reconstrucción vial de 1973.",source:"cfi",links:["today"]},
+  {id:"todayPlace",title:"Chañar actual",kind:"PRESENTE",x:69,y:73,desc:"El presente permite contrastar las huellas históricas con el territorio que existe hoy.",source:"municipal",links:["today"]}
+];
+const TERRITORY_LINKS = [
+  ["river","intakePlace"],["intakePlace","productiveValley"],["productiveValley","townSite"],
+  ["barda","productiveValley"],["roads","townSite"],["townSite","todayPlace"]
+];
+const DOCUMENTS = [
+  {id:"doc1968",year:"1968",title:"20.000 hectáreas: el proyecto",type:"DOCUMENTO",text:"La Municipalidad registra la adquisición de 20.000 hectáreas de monte bruto y el objetivo de sistematizar el terreno mediante obras de agua y plantaciones.",source:"municipal",fact:"documentado",next:["gasparri","irrigation"]},
+  {id:"doc1969",year:"1969",title:"Cuando el agua empieza a cambiar el suelo",type:"DOCUMENTO",text:"La reseña municipal sitúa en 1969 el inicio de las obras de sistematización y los primeros riegos mediante bombeo desde el río Neuquén.",source:"municipal",fact:"documentado",next:["irrigation","intake"]},
+  {id:"doc1971",year:"1971",title:"La primera bocatoma",type:"DOCUMENTO",text:"La primera bocatoma permitió avanzar sobre una primera etapa de riego y vender parcelas plantadas. Es una pieza clave para conectar agua, producción y territorio.",source:"municipal",fact:"documentado",next:["intake","parcels"]},
+  {id:"doc1973",year:"1973",title:"Nacimiento institucional",type:"DOCUMENTO",text:"La Carta Orgánica reconoce el 21 de mayo de 1973 como fecha de fundación. La documentación territorial vincula esa fecha con la creación de la Comisión de Fomento mediante el Decreto Provincial N.º 1339.",source:"cfi",fact:"documentado",next:["foundation","commission"]},
+  {id:"doc1975",year:"1975",title:"Producción y comunidad",type:"DOCUMENTO",text:"La reseña histórica provincial registra primeras cantidades industriales de fruta y la aparición de instituciones comunitarias durante 1975.",source:"cfi",fact:"documentado",next:["fruit","school"]}
+];
+const PHOTO_ARCHIVE = [
+  {id:"photoSign",title:"El Chañar, hoy",caption:"Fotografía real de San Patricio del Chañar disponible en Wikimedia Commons.",image:"https://commons.wikimedia.org/wiki/Special:FilePath/San%20Patricio%20del%20Chañar.png",source:"Wikimedia Commons",url:"https://commons.wikimedia.org/wiki/File:San_Patricio_del_Chañar.png",links:["today"]},
+  {id:"photoLandscape",title:"Chacras y viñedos",caption:"Registro fotográfico contemporáneo de chacras y viñedos de San Patricio del Chañar.",image:"https://media.lmneuquen.com/p/9f0f0e3f1f5d0a0b5f1d9f2b6a4c0d6a/adjuntos/195/imagenes/009/000/0009000123/1200x675/smart/san-patricio-del-chanar-nieve-chacrasjpg.jpg",source:"LM Neuquén · archivo fotográfico",url:"https://www.lmneuquen.com/el-chanar-tambien-se-vistio-blanco-las-postales-que-la-nieve-dejo-en-chacras-y-vinedos-n923537",links:["productiveValley"]},
+  {id:"photoPending",title:"Archivo local por incorporar",caption:"Pieza reservada para una fotografía histórica del Chañar con procedencia, fecha y autorización verificables.",image:null,source:"Archivo local pendiente",url:null,links:["territory"]}
+];
+const RELATION_GRAPH = [
+  {from:"Roberto Gasparri",to:"20.000 ha",why:"proyecto productivo",requires:["gasparri"]},
+  {from:"20.000 ha",to:"Riego",why:"sistematización y bombeo",requires:["gasparri","irrigation"]},
+  {from:"Riego",to:"Bocatoma",why:"escala del sistema",requires:["irrigation","intake"]},
+  {from:"Bocatoma",to:"Parcelas",why:"ocupación productiva",requires:["intake","parcels"]},
+  {from:"Parcelas",to:"San Patricio del Chañar",why:"asentamiento y organización",requires:["parcels","foundation"]},
+  {from:"Fundación",to:"Comunidad",why:"instituciones y vida cotidiana",requires:["foundation","commission","school"]}
+];
+const territoryState={selected:null,doc:null,photo:null,connections:new Set()};
+
+function sourceInfo(id){return SOURCES[id]||EXTRA_SOURCES[id]||{name:"Fuente registrada",url:"#"};}
+function labUnlocked(reqs=[]){return reqs.every(id=>state.discovered.has(id));}
+function territoryPointHTML(p){
+  const unlocked=labUnlocked(p.links);
+  return '<button class="territory-node '+(unlocked?"":"locked")+'" data-territory="'+p.id+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="'+p.title+'"><span></span><b>'+p.title+'</b><small>'+p.kind+'</small></button>';
+}
+function renderTerritoryLab(){
+  const root=$("#territoryLab"); if(!root)return;
+  const selected=TERRITORY_OBJECTS.find(x=>x.id===territoryState.selected);
+  const doc=DOCUMENTS.find(x=>x.id===territoryState.doc);
+  const photo=PHOTO_ARCHIVE.find(x=>x.id===territoryState.photo);
+  root.innerHTML=`
+    <div class="territory-head"><div><p class="kicker">V2.5 · MAPA DE RECONSTRUCCIÓN</p><h3>Reconstruí cómo nació Chañar.</h3><p>Ahora las huellas dejan de vivir separadas: territorio, documentos, fotografías y relaciones forman una investigación espacial.</p></div><b>${state.discovered.size} huellas</b></div>
+    <div class="territory-grid">
+      <div class="territory-map" aria-label="Mapa territorial jugable">
+        <div class="map-sky"></div><div class="map-barda"></div><div class="map-valley"></div><div class="map-river"></div><div class="map-road"></div>
+        <svg class="map-links" viewBox="0 0 100 100" preserveAspectRatio="none">${TERRITORY_LINKS.map(([a,b])=>{const A=TERRITORY_OBJECTS.find(x=>x.id===a),B=TERRITORY_OBJECTS.find(x=>x.id===b);return '<line x1="'+A.x+'" y1="'+A.y+'" x2="'+B.x+'" y2="'+B.y+'"/>';}).join("")}</svg>
+        ${TERRITORY_OBJECTS.map(territoryPointHTML).join("")}
+        <div class="map-legend"><span>● huella territorial</span><span>— conexión</span></div>
+      </div>
+      <aside class="territory-inspector">
+        ${selected?`<div class="inspect-card"><span class="tag">${selected.kind}</span><h4>${selected.title}</h4><p>${selected.desc}</p><small>Fuente: ${sourceInfo(selected.source).name}</small></div>`:"<div class='inspect-empty'><span>EXAMINÁ EL MAPA</span><strong>Elegí un lugar.</strong><p>Los puntos se habilitan cuando la investigación encuentra la huella necesaria.</p></div>"}
+        <div class="map-progress"><b>CAPAS ABIERTAS</b><span>${TERRITORY_OBJECTS.filter(p=>labUnlocked(p.links)).length} / ${TERRITORY_OBJECTS.length}</span></div>
+      </aside>
+    </div>
+    <div class="deep-tools">
+      <div class="tool-panel"><div class="tool-title"><span>01</span><h4>Documentos para inspeccionar</h4></div><div class="document-strip">${DOCUMENTS.map(d=>`<button class="document-card ${labUnlocked(d.next)?"":"locked"}" data-document="${d.id}"><small>${d.year} · ${d.type}</small><strong>${d.title}</strong><span>${labUnlocked(d.next)?"ABRIR DOCUMENTO":"PISTA BLOQUEADA"}</span></button>`).join("")}</div>
+      ${doc?`<article class="document-viewer"><div><span class="tag">${doc.year} · ${doc.fact}</span><h4>${doc.title}</h4><p>${doc.text}</p><div class="source-box"><b>PROCEDENCIA</b><span>${sourceInfo(doc.source).name}</span><a href="${sourceInfo(doc.source).url}" target="_blank" rel="noopener">Consultar fuente ↗</a></div></div><button data-close-doc>×</button></article>`:""}
+      </div>
+      <div class="tool-panel"><div class="tool-title"><span>02</span><h4>Fotografías reales y archivo</h4></div><div class="photo-strip">${PHOTO_ARCHIVE.map(p=>`<button class="photo-card ${p.image?"":"pending"}" data-photo="${p.id}">${p.image?`<img src="${p.image}" alt="${p.title}" loading="lazy">`:"<div class='photo-missing'>ARCHIVO LOCAL</div>"}<strong>${p.title}</strong><small>${p.caption}</small></button>`).join("")}</div>
+      ${photo?`<article class="photo-viewer"><div class="photo-large">${photo.image?`<img src="${photo.image}" alt="${photo.title}">`:"<div class='photo-missing large'>FOTOGRAFÍA POR INCORPORAR</div>"}</div><div><span class="tag">ARCHIVO VISUAL</span><h4>${photo.title}</h4><p>${photo.caption}</p><small>${photo.source}</small>${photo.url?`<a href="${photo.url}" target="_blank" rel="noopener">Ver procedencia ↗</a>`:""}</div><button data-close-photo>×</button></article>`:""}
+      </div>
+    </div>
+    <div class="connection-lab"><div class="tool-title"><span>03</span><h4>Conexiones: persona → obra → territorio</h4></div><p>Una conexión sólo se activa cuando el jugador ya reunió las huellas que la sostienen.</p><div class="connection-list">${RELATION_GRAPH.map((r,i)=>{const open=labUnlocked(r.requires),done=territoryState.connections.has(i);return '<button class="connection-row '+(open?"":"locked")+' '+(done?"done":"")+'" data-connection="'+i+'"><span>'+r.from+'</span><i>→</i><span>'+r.to+'</span><small>'+r.why+'</small><b>'+(done?"CONECTADO":open?"CONECTAR":"FALTAN HUELLAS")+'</b></button>';}).join("")}</div></div>
+    <div class="reconstruction-status"><span>RECONSTRUCCIÓN</span><strong>${territoryState.connections.size} conexiones activas</strong><p>${territoryState.connections.size>=3?"La investigación ya permite leer una cadena territorial: tierra → agua → producción → pueblo.":"Todavía faltan relaciones. Seguí las huellas y abrí documentos para construir la explicación."}</p></div>
+  `;
+  root.querySelectorAll("[data-territory]").forEach(b=>b.onclick=()=>{const p=TERRITORY_OBJECTS.find(x=>x.id===b.dataset.territory);if(labUnlocked(p.links)){territoryState.selected=p.id;renderTerritoryLab();}});
+  root.querySelectorAll("[data-document]").forEach(b=>b.onclick=()=>{const d=DOCUMENTS.find(x=>x.id===b.dataset.document);if(labUnlocked(d.next)){territoryState.doc=d.id;renderTerritoryLab();}});
+  root.querySelectorAll("[data-photo]").forEach(b=>b.onclick=()=>{territoryState.photo=b.dataset.photo;renderTerritoryLab();});
+  const cd=root.querySelector("[data-close-doc]");if(cd)cd.onclick=()=>{territoryState.doc=null;renderTerritoryLab();};
+  const cp=root.querySelector("[data-close-photo]");if(cp)cp.onclick=()=>{territoryState.photo=null;renderTerritoryLab();};
+  root.querySelectorAll("[data-connection]").forEach(b=>b.onclick=()=>{const i=Number(b.dataset.connection),r=RELATION_GRAPH[i];if(labUnlocked(r.requires)){territoryState.connections.add(i);renderTerritoryLab();}});
+}
+
+renderTerritoryLab();
 render();
