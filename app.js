@@ -428,5 +428,45 @@ function renderTerritoryLab(){
   root.querySelectorAll("[data-connection]").forEach(b=>b.onclick=()=>{const i=Number(b.dataset.connection),r=RELATION_GRAPH[i];if(labUnlocked(r.requires)){territoryState.connections.add(i);renderTerritoryLab();}});
 }
 
+
+/* V2.6 — TABLERO DE RELACIONES TERRITORIALES */
+const TERRITORY_RELATIONS_V26 = [
+ {a:"river",b:"intakePlace",title:"El río alimenta la obra",text:"La captación conecta el Río Neuquén con el sistema de riego.",proof:["irrigation","intake"]},
+ {a:"intakePlace",b:"productiveValley",title:"El agua transforma el territorio",text:"La obra de captación forma parte del proceso que llevó agua hacia superficies productivas.",proof:["intake","parcels"]},
+ {a:"productiveValley",b:"townSite",title:"Producción y nacimiento del pueblo",text:"La transformación productiva y la organización institucional pertenecen a capas distintas, pero relacionadas, de la historia local.",proof:["parcels","foundation"]},
+ {a:"townSite",b:"todayPlace",title:"De la fundación al presente",text:"El lugar fundado como comunidad puede compararse con el territorio que vemos hoy.",proof:["foundation","today"]},
+ {a:"barda",b:"productiveValley",title:"La forma del territorio importa",text:"La documentación territorial permite leer el contraste entre meseta, barda, valle irrigado y ribera.",proof:["territory","parcels"]}
+];
+const BOARD_V26={pair:[],relations:new Set()};
+
+function renderTerritoryBoardV26(){
+ const root=$("#territoryLab"); if(!root)return;
+ const places=TERRITORY_OBJECTS.filter(p=>labUnlocked(p.links));
+ const pair=TERRITORY_RELATIONS_V26.find(r=>BOARD_V26.pair.length===2&&((r.a===BOARD_V26.pair[0]&&r.b===BOARD_V26.pair[1])||(r.a===BOARD_V26.pair[1]&&r.b===BOARD_V26.pair[0])));
+ const pairPlaces=BOARD_V26.pair.map(id=>TERRITORY_OBJECTS.find(p=>p.id===id)).filter(Boolean);
+ let html="";
+ html+='<div class="territory-head"><div><p class="kicker">V2.6 · TABLERO DE INVESTIGACIÓN</p><h3>Reconstruí cómo nació Chañar.</h3><p>Elegí <strong>dos lugares</strong>. Después reuní las pruebas que permitan explicar qué relación histórica existe entre ellos.</p></div><b>'+BOARD_V26.pair.length+' / 2 seleccionados</b></div>';
+ html+='<div class="territory-grid"><div class="territory-map" aria-label="Mapa territorial jugable"><div class="map-sky"></div><div class="map-barda"></div><div class="map-valley"></div><div class="map-river"></div><div class="map-road"></div>';
+ html+='<svg class="map-links" viewBox="0 0 100 100" preserveAspectRatio="none">'+TERRITORY_LINKS.map(([a,b])=>{const A=TERRITORY_OBJECTS.find(x=>x.id===a),B=TERRITORY_OBJECTS.find(x=>x.id===b);return '<line x1="'+A.x+'" y1="'+A.y+'" x2="'+B.x+'" y2="'+B.y+'"/>';}).join("")+'</svg>';
+ html+=TERRITORY_OBJECTS.map(p=>{const unlocked=labUnlocked(p.links),sel=BOARD_V26.pair.includes(p.id);return '<button class="territory-node '+(unlocked?"":"locked")+' '+(sel?"selected":"")+'" data-board-place="'+p.id+'" style="left:'+p.x+'%;top:'+p.y+'%"><span></span><b>'+p.title+'</b><small>'+p.kind+'</small></button>';}).join("");
+ html+='<div class="map-legend"><span>● lugar investigable</span><span>◆ seleccionado</span><span>— territorio</span></div></div>';
+ html+='<aside class="territory-inspector">';
+ if(!pairPlaces.length) html+='<div class="inspect-empty"><span>PRIMER PASO</span><strong>Elegí dos lugares.</strong><p>El mapa funciona como un tablero de investigación. Seleccioná un punto y después otro.</p></div>';
+ else html+='<div class="pair-selection"><span class="tag">SELECCIÓN</span><h4>'+pairPlaces.map(p=>p.title).join(" + ")+'</h4><p>'+(pairPlaces.length===1?"Elegí un segundo lugar.":"Ahora buscá la relación y reuní sus pruebas.")+'</p></div>';
+ if(pair){
+   const idx=TERRITORY_RELATIONS_V26.indexOf(pair), ready=pair.proof.every(id=>state.discovered.has(id)), done=BOARD_V26.relations.has(idx);
+   html+='<div class="relation-challenge"><span class="tag">HIPÓTESIS TERRITORIAL</span><h4>'+pair.title+'</h4><p>'+pair.text+'</p><div class="proof-meter">'+pair.proof.map(id=>'<span class="'+(state.discovered.has(id)?"open":"")+'">'+(state.discovered.has(id)?"✓":"?")+' '+(DISCOVERIES[id]?.label||id)+'</span>').join("")+'</div><button class="prove-relation" data-board-prove="'+idx+'" '+(ready?"":"disabled")+'>'+(done?"RELACIÓN CONFIRMADA":ready?"CONFIRMAR RELACIÓN":"FALTAN PRUEBAS")+'</button></div>';
+ }
+ html+='<div class="map-progress"><b>LUGARES ABIERTOS</b><span>'+places.length+' / '+TERRITORY_OBJECTS.length+'</span></div></aside></div>';
+ html+='<div class="connection-lab"><div class="tool-title"><span>01</span><h4>Cadena de reconstrucción</h4></div><p>Las relaciones confirmadas se convierten en piezas de una explicación territorial.</p><div class="connection-list">';
+ html+=TERRITORY_RELATIONS_V26.map((r,i)=>{const open=r.proof.every(id=>state.discovered.has(id)),done=BOARD_V26.relations.has(i);return '<button class="connection-row '+(open?"":"locked")+' '+(done?"done":"")+'" data-board-relation="'+i+'"><span>'+TERRITORY_OBJECTS.find(p=>p.id===r.a).title+'</span><i>→</i><span>'+TERRITORY_OBJECTS.find(p=>p.id===r.b).title+'</span><small>'+r.title+'</small><b>'+(done?"CONFIRMADA":open?"INVESTIGAR":"FALTAN HUELLAS")+'</b></button>';}).join("");
+ html+='</div></div><div class="reconstruction-status"><span>RECONSTRUCCIÓN</span><strong>'+BOARD_V26.relations.size+' relaciones territoriales descubiertas</strong><p>'+(BOARD_V26.relations.size>=3?"Ya podés leer una cadena causal del territorio: agua → producción → pueblo → presente.":"Elegí lugares, reuní huellas y confirmá relaciones. La explicación se construye con pruebas.")+'</p></div>';
+ root.innerHTML=html;
+ root.querySelectorAll("[data-board-place]").forEach(b=>b.onclick=()=>{const id=b.dataset.boardPlace;if(!labUnlocked(TERRITORY_OBJECTS.find(p=>p.id===id).links))return;if(BOARD_V26.pair.length===2)BOARD_V26.pair=[];if(!BOARD_V26.pair.includes(id))BOARD_V26.pair.push(id);renderTerritoryLab();});
+ const prove=root.querySelector("[data-board-prove]"); if(prove)prove.onclick=()=>{const i=Number(prove.dataset.boardProve),r=TERRITORY_RELATIONS_V26[i];if(r.proof.every(id=>state.discovered.has(id))){BOARD_V26.relations.add(i);renderTerritoryLab();}};
+ root.querySelectorAll("[data-board-relation]").forEach(b=>b.onclick=()=>{const i=Number(b.dataset.boardRelation),r=TERRITORY_RELATIONS_V26[i];if(r.proof.every(id=>state.discovered.has(id))){BOARD_V26.pair=[r.a,r.b];renderTerritoryLab();}});
+}
+function renderTerritoryLab(){renderTerritoryBoardV26();}
+
 renderTerritoryLab();
 render();
