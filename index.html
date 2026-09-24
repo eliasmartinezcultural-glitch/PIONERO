@@ -9,10 +9,12 @@
 <body>
 <main id="app">
 <header class="top"><div class="brand"><b>P</b><span>PIONERO<small>OCARINA PRODUCCIONES</small></span></div><button id="sources">Fuentes</button></header>
+
 <section id="home" class="screen home">
 <div class="home-copy"><p class="kicker">SAN PATRICIO DEL CHAÑAR</p><h1>Viajá por el tiempo.</h1><p class="lead">No leas una línea de tiempo. Entrá en el territorio y descubrí cómo una transformación productiva terminó construyendo una comunidad.</p><button id="start" class="primary">Comenzar viaje <i>→</i></button></div>
 <div class="hero" aria-hidden="true"><div class="sun"></div><div class="ridge"></div><div class="ground"></div><div class="river"></div><div class="grain"></div><span>1973</span></div>
 </section>
+
 <section id="journey" class="screen journey" hidden>
 <div class="journey-head"><button id="homeBtn">← Inicio</button><div><p id="year" class="kicker"></p><h2 id="title"></h2><p id="hint"></p><div id="eventTags" class="event-tags"></div></div><button id="source2">Fuentes</button></div>
 <div id="world" class="world" tabindex="0" aria-label="Paisaje histórico interactivo">
@@ -20,11 +22,15 @@
 <div class="stamp"><span id="phase"></span><strong id="status"></strong></div>
 </div>
 <div class="controls"><button id="prev">←</button><div><span id="counter"></span><div class="line"><i id="progress"></i></div></div><button id="next">→</button></div>
-<div class="depth-bar"><span>PROGRESO DE EXPLORACIÓN</span><b id="knowledge">0 / 11 huellas</b></div>
+<div class="depth-bar"><span>PROGRESO DE EXPLORACIÓN</span><b id="knowledge">0 / 11 huellas · 0 conexiones</b></div>
 <p class="instruction">Elegí una huella del paisaje o avanzá en el tiempo.</p>
 <div id="discovery" class="discovery" hidden></div>
+
+<section id="relations" class="relations" aria-label="Mapa de relaciones"></section>
+<div id="decision" class="decision" hidden></div>
 </section>
 </main>
+
 <dialog id="modal"><button id="close">×</button><p class="kicker">PIONERO · FUENTES</p><h2>Historia con evidencia.</h2><div id="sourceList"></div></dialog>
 <footer>PIONERO · San Patricio del Chañar · Ocarina Producciones</footer>
 <script src="app.js"></script>
