@@ -85,6 +85,88 @@ const CLUE_CHAINS = [
   {id:"chain-community",title:"Cuando aparece la comunidad",description:"Llevá la investigación hasta el presente sin confundir evidencia histórica con registro contemporáneo.",steps:[{piece:"presentPhoto",label:"Territorio actual",requires:["communityRecord"]}]}
 ];
 const stateExtra={pieces:new Set()};
+
+const VISUAL_ARCHIVE = [
+  {
+    id:"arrival-sign", title:"Ingreso a San Patricio del Chañar", type:"fotografía",
+    image:"https://commons.wikimedia.org/wiki/Special:FilePath/San%20Patricio%20del%20Chañar.png",
+    caption:"Cartel de ingreso a la localidad, fotografía de 2021.",
+    sourceName:"Wikimedia Commons · archivo de Cartago TV", sourceUrl:"https://commons.wikimedia.org/wiki/File:San_Patricio_del_Chañar.png",
+    sourceNote:"Licencia indicada en Wikimedia Commons: CC BY 3.0."
+  },
+  {
+    id:"identity-source", title:"La identidad del territorio", type:"fuente institucional",
+    image:"https://www.sanpatricio.gob.ar/identidad",
+    caption:"Archivo institucional sobre la historia e identidad de San Patricio del Chañar.",
+    sourceName:"Municipalidad de San Patricio del Chañar", sourceUrl:"https://www.sanpatricio.gob.ar/identidad",
+    sourceNote:"La imagen se presenta como acceso al archivo institucional, no como fotografía histórica."
+  },
+  {
+    id:"territory-study", title:"Mapa y territorio", type:"documentación",
+    image:"https://commons.wikimedia.org/wiki/Special:FilePath/Departamento%20A%C3%B1elo%20%28Neuqu%C3%A9n%20-%20Argentina%29.png",
+    caption:"Referencia cartográfica del departamento Añelo para contextualizar el territorio.",
+    sourceName:"Wikimedia Commons", sourceUrl:"https://commons.wikimedia.org/wiki/Category:A%C3%B1elo_Department",
+    sourceNote:"Mapa contextual: no representa por sí solo los límites históricos de las parcelas de Chañar."
+  }
+];
+
+const HISTORICAL_LAYERS = [
+  {year:"1913", title:"Tratayen y el río", text:"Una mensura del ingeniero Tressens registra la colonia Tratayen, un núcleo urbano que habría alcanzado unas 20 manzanas. La fuente municipal señala que presumiblemente desapareció tras una gran crecida del río Neuquén.", evidence:"documented", sources:["municipal"], image:"https://www.sanpatricio.gob.ar/identidad"},
+  {year:"1966", title:"La primera subdivisión moderna", text:"La documentación municipal registra que un grupo de vecinos de Cinco Saltos adquirió El Chañar y llegó a subdividir el campo, sin avanzar más allá por razones económicas según la reseña institucional.", evidence:"documented", sources:["municipal"], image:"https://www.sanpatricio.gob.ar/identidad"},
+  {year:"1968", title:"20.000 hectáreas y un proyecto", text:"Entre abril y mayo de 1968, la Municipalidad registra la adquisición de 20.000 hectáreas de monte bruto para sistematizarlas, con estudios que identificaron una superficie potencialmente regable.", evidence:"documented", sources:["municipal","cfi"]},
+  {year:"1969", title:"El agua empieza a entrar al proyecto", text:"Comenzaron las obras de sistematización y los primeros cultivos fueron regados mediante bombeo desde el río Neuquén. La fuente municipal menciona tres bombas de 1.000.000 litros por hora.", evidence:"documented", sources:["municipal"]},
+  {year:"1971", title:"La primera bocatoma", text:"La primera bocatoma permitió avanzar sobre una primera etapa de riego y vender parcelas plantadas. La fuente municipal sitúa aquí un cambio de escala del proyecto.", evidence:"documented", sources:["municipal"]},
+  {year:"1973", title:"Nace la localidad", text:"El 21 de mayo de 1973 se creó la Comisión de Fomento mediante el Decreto Provincial N.º 1339, fecha reconocida como fundación de San Patricio del Chañar.", evidence:"documented", sources:["cfi","municipal"]},
+  {year:"1974", title:"Instituciones y riego", text:"La reseña provincial ubica el funcionamiento de las autoridades de la Comisión de Fomento el 8 de abril de 1974 y la creación del consorcio de riego durante esa ceremonia.", evidence:"documented", sources:["neuquen"]},
+  {year:"1975", title:"Fruta y vida comunitaria", text:"La Provincia señala que en 1975 se produjeron las primeras cantidades industriales de fruta y se fundaron la cooperadora escolar y el Club Atlético San Patricio.", evidence:"documented", sources:["neuquen"]},
+  {year:"1976", title:"El Club Atlético San Patricio", text:"Una publicación local de 2026 ubica en 1976 la fundación del Club Atlético San Patricio y lo vincula con peones rurales, primeros pobladores, docentes, comerciantes y funcionarios.", evidence:"partial", sources:["chanar"]},
+  {year:"1978", title:"Municipalidad de tercera categoría", text:"La Provincia registra que por Ley N.º 1.106, en 1978, la localidad pasó a ser municipalidad de tercera categoría.", evidence:"documented", sources:["neuquen"]},
+  {year:"1987", title:"Nuevo rango municipal", text:"La reseña provincial registra que en 1987, por Ley N.º 1.700, San Patricio del Chañar obtuvo el rango de municipio de segunda categoría.", evidence:"documented", sources:["neuquen"]},
+  {year:"1999", title:"Aparece una nueva capa productiva", text:"El estudio territorial del CFI recoge que en 1999 Julio Viola, fundador de Bodega del Fin del Mundo, identificó potencial vitivinícola en el desierto patagónico. Es una capa posterior de la historia productiva.", evidence:"documented", sources:["cfi"]},
+  {year:"HOY", title:"Una localidad de capas superpuestas", text:"La localidad combina la memoria del territorio, agricultura, instituciones, educación, producción vitivinícola y transformaciones contemporáneas. Esta capa debe seguir creciendo con registros locales verificables.", evidence:"interpretation", sources:["municipal","cfi"]}
+];
+
+const PEOPLE_AND_VOICES = [
+  {id:"roberto-gasparri", name:"Roberto Gasparri", role:"ingeniero y figura central del proyecto productivo", status:"documented", text:"Las fuentes provinciales y territoriales lo vinculan con la adquisición de las tierras en 1968 y con la transformación productiva que precedió a la fundación de la localidad.", sources:["cfi","neuquen"]},
+  {id:"tressens", name:"Ing. Tressens", role:"autor de una mensura hacia 1913", status:"documented", text:"La fuente municipal lo identifica como autor de una mensura relacionada con la colonia Tratayen. PIONERO conserva el dato como pieza histórica, sin agregar una biografía no documentada.", sources:["municipal"]},
+  {id:"julio-viola", name:"Julio Viola", role:"pionero de la vitivinicultura local", status:"documented", text:"El estudio territorial del CFI lo identifica como fundador de Bodega del Fin del Mundo y ubica en 1999 su lectura del potencial vitivinícola de la zona.", sources:["cfi"]},
+  {id:"testimonios", name:"Testimonios de vecinos", role:"archivo oral pendiente", status:"pending", text:"No se inventarán testimonios. Esta ficha quedará bloqueada hasta incorporar entrevistas reales, con nombre, fecha, lugar y autorización de uso.", sources:[]}
+];
+
+const EXTRA_SOURCES = {
+  neuquen:{name:"Neuquén Informa · reseñas históricas",url:"https://www.neuqueninforma.gob.ar/noticias/2014/05/22/48785-jorge-sapag-asistira-al-41-aniversario-de-san-patricio-del-chanar",type:"institucional"},
+  chanar:{name:"Chañar Digital · 50 años del Club Atlético San Patricio",url:"https://chanardigital.com.ar/articulo/2026/05/club-atletico-san-patricio-50-anos-de-historia-identidad-y-pasion.php",type:"prensa local"}
+};
+Object.assign(SOURCES,EXTRA_SOURCES);
+
+function renderArchive(){
+  const root=$("#archive"); if(!root)return;
+  root.innerHTML = `
+    <div class="archive-head"><div><p class="kicker">ARCHIVO VISUAL Y DOCUMENTAL</p><h3>Chañar también se investiga mirando.</h3></div><b>${VISUAL_ARCHIVE.length} piezas visuales</b></div>
+    <p class="relations-copy">Las imágenes no son decoración. Cada una tiene procedencia, fecha o función documental. Cuando no existe una fotografía histórica verificable, PIONERO lo declara.</p>
+    <div class="archive-grid">${VISUAL_ARCHIVE.map(v=>`
+      <article class="archive-card">
+        <div class="archive-media">${v.image.startsWith("http") && v.image.includes("Special:FilePath") ? `<img src="${v.image}" alt="${v.title}" loading="lazy">` : `<div class="archive-placeholder"><span>ARCHIVO</span><strong>${v.title}</strong><small>Ver fuente</small></div>`}</div>
+        <div class="archive-body"><span class="tag">${v.type}</span><h4>${v.title}</h4><p>${v.caption}</p><a href="${v.sourceUrl}" target="_blank" rel="noopener">Abrir fuente →</a><small>${v.sourceNote}</small></div>
+      </article>`).join("")}</div>`;
+}
+
+function renderHistoricalLayers(){
+  const root=$("#layers"); if(!root)return;
+  root.innerHTML = `
+    <div class="archive-head"><div><p class="kicker">CAPAS DE HISTORIA</p><h3>No empieza en 1968 y no termina en 1973.</h3></div><b>${HISTORICAL_LAYERS.length} momentos</b></div>
+    <div class="history-grid">${HISTORICAL_LAYERS.map((x,i)=>`
+      <article class="history-card"><span class="history-year">${x.year}</span><h4>${x.title}</h4><p>${x.text}</p><div class="history-foot"><span>${evidenceLabel(x.evidence)}</span><span>${x.sources.map(s=>SOURCES[s]?.name||s).join(" · ")}</span></div>${x.image?`<a href="${x.image}" target="_blank" rel="noopener">Consultar archivo →</a>`:""}</article>`).join("")}</div>`;
+}
+
+function renderPeople(){
+  const root=$("#people"); if(!root)return;
+  root.innerHTML = `
+    <div class="archive-head"><div><p class="kicker">PERSONAS Y VOCES</p><h3>La historia necesita nombres, no personajes inventados.</h3></div></div>
+    <div class="people-grid">${PEOPLE_AND_VOICES.map(p=>`
+      <article class="person-card ${p.status==="pending"?"pending":""}"><div class="person-mark">${p.status==="pending"?"?":"•"}</div><div><span class="tag">${p.status==="pending"?"PENDIENTE":"FUENTE DOCUMENTAL"}</span><h4>${p.name}</h4><strong>${p.role}</strong><p>${p.text}</p><small>${p.sources.map(s=>SOURCES[s]?.name||s).join(" · ")||"Sin testimonio incorporado todavía."}</small></div></article>`).join("")}</div>`;
+}
+
 function pieceUnlocked(id){const p=EVIDENCE_PIECES[id];return !!p&&p.supports.some(h=>state.discovered.has(h));}
 function chainStepUnlocked(step){return step.requires.every(id=>stateExtra.pieces.has(id));}
 function renderChains(){
@@ -96,7 +178,9 @@ function renderChains(){
   $("#chains").innerHTML="<div class=\"relations-head\"><div><p class=\"kicker\">RED DE INVESTIGACIÓN</p><h3>Una evidencia puede abrir otra.</h3></div><b>"+stateExtra.pieces.size+" piezas</b></div><p class=\"relations-copy\">Documentos, mapas y fotografías funcionan como piezas distintas. El sistema sólo las desbloquea cuando existe una huella que las sostiene.</p><div class=\"chain-list\">"+html+"</div>";
 }
 function openPiece(id){
-  const p=EVIDENCE_PIECES[id];if(!p||!pieceUnlocked(id))return;stateExtra.pieces.add(id);const source=SOURCES[p.source];
+  const p=EVIDENCE_PIECES[id];
+  const chainUnlocked=CLUE_CHAINS.some(c=>c.steps.some(s=>s.piece===id&&chainStepUnlocked(s)));
+  if(!p||!pieceUnlocked(id)||(!chainUnlocked&&!stateExtra.pieces.has(id)))return;stateExtra.pieces.add(id);const source=SOURCES[p.source];
   $("#evidence").innerHTML="<div class=\"decision-top\"><span class=\"tag\">"+p.type.toUpperCase()+"</span><button id=\"evidenceClose\">×</button></div><p class=\"kicker\">PIEZA DE EVIDENCIA</p><h3>"+p.title+"</h3><p>"+p.text+"</p><div class=\"evidence-meta\"><b>Relacionada con:</b> "+p.supports.map(id=>DISCOVERIES[id]?.title).filter(Boolean).join(" · ")+"<br><b>Fuente:</b> "+(source?.name||"—")+"</div><small>Esta pieza representa una capa de investigación. No sustituye el documento original.</small>";
   $("#evidence").hidden=false;renderChains();$("#evidenceClose").onclick=()=>$("#evidence").hidden=true;$("#evidence").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
@@ -126,6 +210,9 @@ function render(){
   $("#next").disabled=state.eventIndex===EVENTS.length-1;
   renderRelations();
   renderChains();
+  renderArchive();
+  renderHistoricalLayers();
+  renderPeople();
 }
 
 function renderRelations(){
