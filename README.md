@@ -107,3 +107,21 @@ Objetos actuales:
 - Club Atlético San Patricio.
 
 Regla: una pieza bloqueada no se muestra como conseguida. Las fuentes originales permanecen accesibles.
+
+
+## V2.5 — Reconstrucción territorial jugable
+
+V2.5 convierte la investigación histórica en una experiencia espacial:
+
+- **Mapa territorial interactivo:** río Neuquén, zona de captación, valle productivo, casco urbano, barda, circulación y presente funcionan como nodos investigables.
+- **Documentos inspeccionables:** cada documento muestra contenido, estado de evidencia y procedencia.
+- **Archivo fotográfico:** se incorporan fotografías reales con procedencia explícita; las piezas todavía no verificadas quedan reservadas y marcadas como pendientes.
+- **Conexiones visuales:** el jugador puede activar relaciones entre persona, proyecto, agua, obras, parcelas, fundación y comunidad.
+- **Regla de evidencia:** una relación no se habilita hasta reunir las huellas que la sostienen.
+- **Cartografía honesta:** las posiciones narrativas del mapa no se presentan como coordenadas históricas exactas cuando las fuentes no las documentan.
+
+### Secuencia central V2.5
+
+**HUELLA → MAPA → DOCUMENTO/FOTOGRAFÍA → RELACIÓN → CONEXIÓN → NUEVA LECTURA DEL TERRITORIO**
+
+La V1 bloqueada permanece intacta.
