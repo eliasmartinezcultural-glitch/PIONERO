@@ -2,34 +2,30 @@
 
 **Viaje por la historia de San Patricio del Chañar.**
 
-PIONERO es una experiencia histórica interactiva centrada en tiempo, territorio y descubrimiento.
+## V1 bloqueada
 
-## Reinicio arquitectónico
+La versión base quedó preservada en la rama **PIONERO-V1-BLOQUEADA**. No se modifica.
 
-Esta versión parte deliberadamente de una base mínima y estable:
+## V2 · Núcleo de sistema
 
-- un HTML
-- un CSS
-- un JavaScript
-- sin módulos
-- sin runtime de recuperación
-- sin dependencias
-- sin bundler
-- sin estado persistente obligatorio
-- compatible con GitHub Pages
+Esta rama construye profundidad estructural sobre la experiencia mínima sin convertir la primera pantalla en un panel complejo.
 
-La complejidad queda preparada para crecer después, pero la experiencia inicial debe permanecer simple.
+El núcleo ahora separa:
 
-## Regla histórica
+- **Eventos:** momentos del proceso histórico.
+- **Capas:** territorio, agua, producción, comunidad e identidad.
+- **Huellas:** puntos descubribles vinculados a cada momento.
+- **Evidencia:** documentado, parcial, reconstrucción e interpretación.
+- **Fuentes:** cada huella puede declarar qué documentos la sostienen.
+- **Estado:** recorrido, descubrimientos y navegación quedan preparados para futuras actividades.
+- **Renderizado:** el paisaje visual responde al estado del momento histórico.
 
-Cada contenido se distingue entre documentado, parcial, reconstrucción e interpretación. Las reconstrucciones no se presentan como fotografías históricas.
+### Principio central
 
-## Próxima evolución
+PIONERO no debe ser una línea de tiempo decorada.
 
-1. validar funcionamiento real;
-2. consolidar contenido y fuentes;
-3. incorporar fotografías históricas verificadas;
-4. añadir comparación “mismo lugar” sólo donde exista evidencia;
-5. recién después ampliar territorio, audio, educación e inmersión.
+Debe convertirse progresivamente en un **sistema de descubrimiento histórico del territorio**.
+
+La profundidad futura se agregará sobre este núcleo mediante relaciones, decisiones, actividades, documentos, testimonios, fotografías, mapas y consecuencias, siempre sin romper la V1.
 
 **Ocarina Producciones.**
