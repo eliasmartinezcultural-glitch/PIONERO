@@ -192,6 +192,50 @@ function evidenceLabel(type){return ({documented:"DOCUMENTADO",partial:"PARCIAL"
 function currentEvent(){return EVENTS[state.eventIndex];}
 function relationUnlocked(r){return r.requires.every(id=>state.discovered.has(id));}
 
+
+const INVESTIGATION_OBJECTS = {
+  photoTratayen:{type:"FOTOGRAFÍA / ARCHIVO",title:"Tratayen: una huella anterior",text:"La existencia de Tratayen aparece documentada mediante una mensura de alrededor de 1913. PIONERO no presenta una fotografía histórica que no haya sido localizada y verificada.",source:"Municipalidad de San Patricio del Chañar",url:"https://www.sanpatricio.gob.ar/identidad",lockedText:"Necesitás encontrar primero la huella TRATAYEN."},
+  docRiego:{type:"DOCUMENTO",title:"La ruta del agua",text:"La documentación describe las obras de sistematización, el bombeo inicial y la primera bocatoma. Esta pieza permite reconstruir cómo el agua pasó a organizar el territorio productivo.",source:"Municipalidad de San Patricio del Chañar / CFI",url:"https://www.sanpatricio.gob.ar/identidad",lockedText:"Necesitás descubrir primero RIEGO."},
+  mapParcelas:{type:"MAPA / TERRITORIO",title:"Las parcelas",text:"El proyecto productivo transformó el monte en un territorio parcelado. La primera etapa de riego permitió avanzar con parcelas plantadas y comercializadas.",source:"Municipalidad / CFI",url:"https://www.argentina.gob.ar/sites/default/files/plan_de_ordenamiento_territorial_y_ambiental_para_las_localidades_des_anelo_san_patricio_del_chanar_y_sauzal_bonito_0.pdf",lockedText:"Primero tenés que descubrir PARCELAS."},
+  placeFoundation:{type:"LUGAR",title:"Dónde aparece el pueblo",text:"En 1973 se crea la Comisión de Fomento de San Patricio del Chañar. La creación del núcleo urbano está vinculada en las fuentes al desarrollo productivo y a la radicación de trabajadores agrícolas.",source:"CFI / Municipalidad",url:"https://www.argentina.gob.ar/sites/default/files/plan_de_ordenamiento_territorial_y_ambiental_para_las_localidades_des_anelo_san_patricio_del_chanar_y_sauzal_bonito_0.pdf",lockedText:"La fundación todavía no está conectada con la investigación."},
+  personGasparri:{type:"PERSONA",title:"Roberto Gasparri",text:"Las fuentes institucionales lo ubican como figura central del proyecto que transformó el territorio desde 1968. En PIONERO, la persona funciona como nodo: conecta tierra, agua, producción y fundación.",source:"Neuquén Informa / CFI",url:"https://www.neuqueninforma.gob.ar/noticias/2013/05/17/29151-ana-pechen-preside-la-ceremonia-aniversario-de-san-patricio-del-chanar",lockedText:"La persona se desbloquea cuando conectás tierra y proyecto productivo."},
+  schoolRecord:{type:"DOCUMENTO / INSTITUCIÓN",title:"La primera escuela",text:"La cronología local registra el inicio de la Escuela Nº 273 en 1975. Esta pieza abre una nueva investigación: cómo una zona productiva se convirtió también en comunidad.",source:"Cronología local",url:"https://masneuquen.com/efemerides-cronologia-de-san-patricio-del-chanar-a-traves-de-los-anos/",lockedText:"Primero necesitás conectar fundación y comunidad."},
+  clubRecord:{type:"DOCUMENTO / COMUNIDAD",title:"El Club Atlético San Patricio",text:"La cronología local registra su creación en 1976 como respuesta a la necesidad de un espacio de contención para jóvenes. La pieza permite estudiar la aparición de instituciones sociales después de la fundación.",source:"Cronología local",url:"https://masneuquen.com/efemerides-cronologia-de-san-patricio-del-chanar-a-traves-de-los-anos/",lockedText:"La vida comunitaria se desbloquea después de investigar la escuela."}
+};
+
+const OBJECT_RULES = {
+  photoTratayen:()=>state.discovered.has("territory"),
+  docRiego:()=>state.discovered.has("irrigation"),
+  mapParcelas:()=>state.discovered.has("parcels"),
+  placeFoundation:()=>state.discovered.has("foundation"),
+  personGasparri:()=>state.discovered.has("gasparri") && (state.relations.has("water-production")||state.discovered.has("irrigation")),
+  schoolRecord:()=>state.relations.has("town-community") || state.discovered.has("school"),
+  clubRecord:()=>state.discovered.has("school")
+};
+
+function renderInvestigationLab(){
+  const root=$("#lab"); if(!root)return;
+  const objects=Object.entries(INVESTIGATION_OBJECTS);
+  root.innerHTML=`
+    <div class="lab-head"><div><p class="kicker">LABORATORIO DE INVESTIGACIÓN</p><h3>Las fuentes ahora son objetos del juego.</h3><p>Encontrá una pieza, examiná su evidencia y conectala con otra. No todo está disponible desde el comienzo.</p></div><b>${objects.filter(([id])=>OBJECT_RULES[id]()).length} / ${objects.length}</b></div>
+    <div class="lab-grid">${objects.map(([id,o])=>{
+      const open=OBJECT_RULES[id]();
+      return `<button class="invest-object ${open?"open":"locked"}" data-object="${id}">
+        <span class="object-icon">${o.type==="FOTOGRAFÍA / ARCHIVO"?"▣":o.type.includes("MAPA")?"⌖":o.type==="PERSONA"?"◉":o.type.includes("LUGAR")?"⌂":"▤"}</span>
+        <small>${o.type}</small><strong>${o.title}</strong><p>${open?o.text:o.lockedText}</p><em>${open?"EXAMINAR →":"BLOQUEADO"}</em>
+      </button>`;
+    }).join("")}</div>
+    <div id="objectViewer" class="object-viewer" hidden></div>`;
+}
+
+function openInvestigationObject(id){
+  const o=INVESTIGATION_OBJECTS[id]; if(!o || !OBJECT_RULES[id]())return;
+  const viewer=$("#objectViewer");
+  viewer.innerHTML=`<div class="viewer-top"><span class="tag">${o.type}</span><button id="viewerClose">×</button></div><h3>${o.title}</h3><p>${o.text}</p><div class="source-box"><b>PROCEDENCIA</b><span>${o.source}</span><a href="${o.url}" target="_blank" rel="noopener">Abrir fuente original →</a></div><div class="viewer-action"><span>PIEZA EXAMINADA</span><b>Ahora puede usarse para construir relaciones.</b></div>`;
+  viewer.hidden=false; $("#viewerClose").onclick=()=>viewer.hidden=true;
+  viewer.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 function render(){
   const event=currentEvent();
   $("#year").textContent=event.year;
@@ -213,6 +257,7 @@ function render(){
   renderArchive();
   renderHistoricalLayers();
   renderPeople();
+  renderInvestigationLab();
 }
 
 function renderRelations(){
@@ -297,5 +342,6 @@ $("#close").onclick=()=>$("#modal").close();
 $("#points").onclick=event=>{const button=event.target.closest("button[data-id]");if(button)discover(button.dataset.id);};
 $("#relations").onclick=event=>{const card=event.target.closest("[data-relation]");if(card)openRelation(card.dataset.relation);};
 $("#chains").onclick=event=>{const card=event.target.closest("[data-piece]");if(card)openPiece(card.dataset.piece);};
+$("#lab").onclick=event=>{const card=event.target.closest("[data-object]");if(card)openInvestigationObject(card.dataset.object);};
 document.addEventListener("keydown",event=>{if($("#journey").hidden)return;if(event.key==="ArrowRight")travel(state.eventIndex+1);if(event.key==="ArrowLeft")travel(state.eventIndex-1);if(event.key==="Escape"){if($("#modal").open)$("#modal").close();if(!$("#decision").hidden)$("#decision").hidden=true;}});
 render();
