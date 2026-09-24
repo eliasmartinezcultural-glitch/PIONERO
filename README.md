@@ -60,3 +60,28 @@ Debe ser profundizar el sistema con:
 Debe convertirse progresivamente en un **sistema de descubrimiento histórico del territorio**.
 
 **Ocarina Producciones.**
+
+
+## V2.3 · Archivo territorial
+Esta evolución profundiza PIONERO específicamente sobre **San Patricio del Chañar**.
+
+Se incorporan:
+- archivo visual con procedencia;
+- una capa histórica previa a 1968 (Tratayen y la mensura de 1913);
+- 1966, 1968, 1969, 1971, 1973, 1974, 1975, 1976, 1978, 1987, 1999 y presente;
+- personas históricamente documentadas;
+- espacio explícito para testimonios orales reales, sin inventarlos;
+- enlaces a fuentes institucionales, estudio territorial, prensa local y archivo visual;
+- control de evidencia para diferenciar documentación, parcialidad, reconstrucción e interpretación.
+
+### Regla visual
+Una fotografía real debe conservar su procedencia. Una reconstrucción no puede presentarse como fotografía histórica. Los mapas contextuales se etiquetan como contextuales.
+
+### Fuentes incorporadas
+- Municipalidad de San Patricio del Chañar — Nuestra Identidad.
+- CFI — estudio territorial de Neuquén.
+- Neuquén Informa — reseñas históricas.
+- Chañar Digital — historia del Club Atlético San Patricio.
+- Wikimedia Commons — fotografía del cartel de ingreso, con licencia indicada en su ficha.
+
+La próxima expansión lógica no es llenar tarjetas: es incorporar **fotografías locales verificables, mapas históricos, documentos digitalizados y testimonios reales** y hacer que cada pieza tenga una función dentro de las cadenas de investigación.
