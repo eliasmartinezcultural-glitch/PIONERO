@@ -61,3 +61,32 @@ button.relation-card:hover{border-color:#d7a85c88;transform:translateY(-2px)}
 .chain-step.locked{opacity:.4;cursor:default}
 .evidence-meta{margin-top:15px;padding:12px;background:#18130f;color:#9d9282;font-size:11px;line-height:1.7}
 @media(max-width:760px){.chain-steps{grid-template-columns:1fr}.chain-top h3{font-size:22px}}
+
+.archive{max-width:1000px;margin:38px auto 0;padding:26px 0 4px;border-top:1px solid #fff2}
+.archive-head{display:flex;justify-content:space-between;gap:20px;align-items:end}
+.archive-head h3{font:500 30px Georgia,serif;margin:0}
+.archive-head>b{color:var(--accent);font:500 18px Georgia,serif}
+.archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.archive-card,.history-card,.person-card{background:#211b14;border:1px solid #fff1}
+.archive-media{aspect-ratio:16/10;background:#30271d;overflow:hidden}
+.archive-media img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(.98)}
+.archive-placeholder{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;background:linear-gradient(145deg,#514331,#201a13);color:#cdbd9e}
+.archive-placeholder span{font-size:9px;letter-spacing:.18em;color:var(--accent)}
+.archive-placeholder strong{font:500 22px Georgia,serif;margin-top:8px}
+.archive-placeholder small{margin-top:8px;color:#8d8170}
+.archive-body{padding:15px}
+.archive-body h4,.history-card h4,.person-card h4{font:500 21px Georgia,serif;margin:6px 0 8px}
+.archive-body p,.history-card p,.person-card p{color:#a99e8d;font-size:12px;line-height:1.55}
+.archive-body a,.history-card a{display:block;color:#d7a85c;font-size:10px;letter-spacing:.08em;text-decoration:none;margin-top:10px}
+.archive-body small,.person-card small{display:block;color:#70685d;font-size:9px;line-height:1.5;margin-top:9px}
+.history-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
+.history-card{padding:15px;min-height:190px}
+.history-year{color:var(--accent);font:italic 18px Georgia,serif}
+.history-card h4{font-size:18px}
+.history-foot{display:flex;flex-direction:column;gap:5px;border-top:1px solid #fff1;padding-top:10px;margin-top:12px;color:#70685d;font-size:8px;letter-spacing:.08em}
+.people-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.person-card{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:16px}
+.person-mark{width:42px;height:42px;border:1px solid #d7a85c66;display:grid;place-items:center;color:var(--accent);font:24px Georgia,serif}
+.person-card strong{display:block;color:#c6b9a6;font-size:11px}
+.person-card.pending{opacity:.72}
+@media(max-width:760px){.archive-head h3{font-size:24px}.archive-grid,.history-grid,.people-grid{grid-template-columns:1fr}.archive{margin-top:28px}.person-card{grid-template-columns:42px 1fr}}
