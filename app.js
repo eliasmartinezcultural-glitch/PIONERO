@@ -70,6 +70,36 @@ const RELATIONS = [
   }
 ];
 
+const EVIDENCE_PIECES = {
+  irrigationDocument:{title:"Registro de obra",type:"documento",text:"Pieza documental sobre el inicio de las obras de sistematización y riego.",supports:["irrigation"],source:"municipal"},
+  intakeRecord:{title:"Registro de bocatoma",type:"documento",text:"Pieza documental asociada a la primera bocatoma y a la ampliación del área bajo riego.",supports:["intake"],source:"municipal"},
+  territoryMap:{title:"Mapa del territorio",type:"mapa",text:"Mapa didáctico: sirve para ubicar relaciones espaciales sin afirmar coordenadas históricas que no estén documentadas.",supports:["territory","place"],source:"cfi"},
+  foundationRecord:{title:"Acta de fundación",type:"documento",text:"Pieza documental sobre el Decreto Provincial N.º 1339 y la creación de la Comisión de Fomento.",supports:["foundation"],source:"cfi"},
+  parcelPlan:{title:"Plano de parcelas",type:"mapa",text:"Pieza de investigación sobre la nueva ocupación productiva del suelo.",supports:["parcels"],source:"municipal"},
+  communityRecord:{title:"Registro comunitario",type:"documento",text:"Pieza pendiente de ampliar con documentación específica sobre educación y vida cotidiana.",supports:["school"],source:"cfi"},
+  presentPhoto:{title:"Fotografía contemporánea",type:"fotografía",text:"Espacio reservado para una fotografía verificable del territorio actual.",supports:["today"],source:"municipal"}
+};
+const CLUE_CHAINS = [
+  {id:"chain-water",title:"La ruta del agua",description:"Seguí cómo una decisión sobre la tierra termina convirtiéndose en infraestructura.",steps:[{piece:"territoryMap",label:"Ubicación",requires:[]},{piece:"irrigationDocument",label:"Primeros riegos",requires:["territoryMap"]},{piece:"intakeRecord",label:"Bocatoma",requires:["irrigationDocument"]}]},
+  {id:"chain-town",title:"Del campo al pueblo",description:"Reconstruí la relación entre producción, parcelas y fundación.",steps:[{piece:"parcelPlan",label:"Parcelas",requires:["intakeRecord"]},{piece:"foundationRecord",label:"Fundación",requires:["parcelPlan"]},{piece:"communityRecord",label:"Vida comunitaria",requires:["foundationRecord"]}]},
+  {id:"chain-community",title:"Cuando aparece la comunidad",description:"Llevá la investigación hasta el presente sin confundir evidencia histórica con registro contemporáneo.",steps:[{piece:"presentPhoto",label:"Territorio actual",requires:["communityRecord"]}]}
+];
+const stateExtra={pieces:new Set()};
+function pieceUnlocked(id){const p=EVIDENCE_PIECES[id];return !!p&&p.supports.some(h=>state.discovered.has(h));}
+function chainStepUnlocked(step){return step.requires.every(id=>stateExtra.pieces.has(id));}
+function renderChains(){
+  const html=CLUE_CHAINS.map(chain=>{
+    const done=chain.steps.filter(s=>stateExtra.pieces.has(s.piece)).length;
+    const steps=chain.steps.map((s,i)=>{const unlocked=chainStepUnlocked(s),found=stateExtra.pieces.has(s.piece);return "<button class=\"chain-step "+(found?"found ":"")+(unlocked?"":"locked")+" \" data-piece=\""+s.piece+"\"><span>0"+(i+1)+"</span><strong>"+s.label+"</strong><small>"+(found?"EVIDENCIA REUNIDA":unlocked?"INVESTIGAR →":"PISTA BLOQUEADA")+"</small></button>";}).join("");
+    return "<article class=\"chain-card\"><div class=\"chain-top\"><div><p class=\"kicker\">CADENA DE PISTAS</p><h3>"+chain.title+"</h3></div><b>"+done+"/"+chain.steps.length+"</b></div><p>"+chain.description+"</p><div class=\"chain-steps\">"+steps+"</div></article>";
+  }).join("");
+  $("#chains").innerHTML="<div class=\"relations-head\"><div><p class=\"kicker\">RED DE INVESTIGACIÓN</p><h3>Una evidencia puede abrir otra.</h3></div><b>"+stateExtra.pieces.size+" piezas</b></div><p class=\"relations-copy\">Documentos, mapas y fotografías funcionan como piezas distintas. El sistema sólo las desbloquea cuando existe una huella que las sostiene.</p><div class=\"chain-list\">"+html+"</div>";
+}
+function openPiece(id){
+  const p=EVIDENCE_PIECES[id];if(!p||!pieceUnlocked(id))return;stateExtra.pieces.add(id);const source=SOURCES[p.source];
+  $("#evidence").innerHTML="<div class=\"decision-top\"><span class=\"tag\">"+p.type.toUpperCase()+"</span><button id=\"evidenceClose\">×</button></div><p class=\"kicker\">PIEZA DE EVIDENCIA</p><h3>"+p.title+"</h3><p>"+p.text+"</p><div class=\"evidence-meta\"><b>Relacionada con:</b> "+p.supports.map(id=>DISCOVERIES[id]?.title).filter(Boolean).join(" · ")+"<br><b>Fuente:</b> "+(source?.name||"—")+"</div><small>Esta pieza representa una capa de investigación. No sustituye el documento original.</small>";
+  $("#evidence").hidden=false;renderChains();$("#evidenceClose").onclick=()=>$("#evidence").hidden=true;$("#evidence").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
 const LAYERS={territory:"Territorio",water:"Agua",production:"Producción",community:"Comunidad",identity:"Identidad"};
 const state={eventIndex:0,discovered:new Set(),history:[],relations:new Set(),answers:{}};
 const $=selector=>document.querySelector(selector);
@@ -95,6 +125,7 @@ function render(){
   $("#prev").disabled=state.eventIndex===0;
   $("#next").disabled=state.eventIndex===EVENTS.length-1;
   renderRelations();
+  renderChains();
 }
 
 function renderRelations(){
@@ -178,5 +209,6 @@ $("#source2").onclick=openSources;
 $("#close").onclick=()=>$("#modal").close();
 $("#points").onclick=event=>{const button=event.target.closest("button[data-id]");if(button)discover(button.dataset.id);};
 $("#relations").onclick=event=>{const card=event.target.closest("[data-relation]");if(card)openRelation(card.dataset.relation);};
+$("#chains").onclick=event=>{const card=event.target.closest("[data-piece]");if(card)openPiece(card.dataset.piece);};
 document.addEventListener("keydown",event=>{if($("#journey").hidden)return;if(event.key==="ArrowRight")travel(state.eventIndex+1);if(event.key==="ArrowLeft")travel(state.eventIndex-1);if(event.key==="Escape"){if($("#modal").open)$("#modal").close();if(!$("#decision").hidden)$("#decision").hidden=true;}});
 render();
