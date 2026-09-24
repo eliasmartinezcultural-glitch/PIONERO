@@ -371,7 +371,7 @@ const DOCUMENTS = [
 ];
 const PHOTO_ARCHIVE = [
   {id:"photoSign",title:"El Chañar, hoy",caption:"Fotografía real de San Patricio del Chañar disponible en Wikimedia Commons.",image:"https://commons.wikimedia.org/wiki/Special:FilePath/San%20Patricio%20del%20Chañar.png",source:"Wikimedia Commons",url:"https://commons.wikimedia.org/wiki/File:San_Patricio_del_Chañar.png",links:["today"]},
-  {id:"photoLandscape",title:"Chacras y viñedos",caption:"Registro fotográfico contemporáneo de chacras y viñedos de San Patricio del Chañar.",image:"https://media.lmneuquen.com/p/9f0f0e3f1f5d0a0b5f1d9f2b6a4c0d6a/adjuntos/195/imagenes/009/000/0009000123/1200x675/smart/san-patricio-del-chanar-nieve-chacrasjpg.jpg",source:"LM Neuquén · archivo fotográfico",url:"https://www.lmneuquen.com/el-chanar-tambien-se-vistio-blanco-las-postales-que-la-nieve-dejo-en-chacras-y-vinedos-n923537",links:["productiveValley"]},
+  {id:"photoLandscape",title:"Chacras y viñedos",caption:"Archivo fotográfico contemporáneo: el artículo registra imágenes aéreas de chacras y viñedos de San Patricio del Chañar. La fotografía queda vinculada al artículo de origen hasta incorporar el archivo directo.",image:null,source:"LM Neuquén · archivo fotográfico",url:"https://www.lmneuquen.com/el-chanar-tambien-se-vistio-blanco-las-postales-que-la-nieve-dejo-en-chacras-y-vinedos-n923537",links:["productiveValley"]},
   {id:"photoPending",title:"Archivo local por incorporar",caption:"Pieza reservada para una fotografía histórica del Chañar con procedencia, fecha y autorización verificables.",image:null,source:"Archivo local pendiente",url:null,links:["territory"]}
 ];
 const RELATION_GRAPH = [
