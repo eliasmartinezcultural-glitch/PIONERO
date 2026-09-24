@@ -29,12 +29,54 @@ const DISCOVERIES = {
   today:{title:"El presente",text:"El presente se considera una capa interpretativa que deberá crecer con fotografías, testimonios, mapas y registros contemporáneos verificables.",type:"interpretation",layer:"identity",sources:["municipal","cfi","carta"]}
 };
 
+/*
+  RELACIONES = el segundo motor de PIONERO.
+  No inventan hechos nuevos: conectan huellas documentadas para que el jugador
+  pueda construir una explicación y ver qué evidencia todavía falta.
+*/
+const RELATIONS = [
+  {
+    id:"water-production",
+    title:"¿Qué cambió primero: el agua o la producción?",
+    text:"Relacioná el proyecto de transformación con las obras que hicieron posible el riego.",
+    requires:["gasparri","irrigation","intake"],
+    nodes:["Proyecto 1968","Riego 1969","Bocatoma 1971"],
+    options:[
+      {label:"El riego es una consecuencia del proyecto de transformación.",correct:true,consequence:"Conectaste proyecto → agua → escala. La relación queda incorporada al mapa."},
+      {label:"La producción apareció sin depender de las obras de agua.",correct:false,consequence:"La pista queda abierta: revisá las huellas de 1968, 1969 y 1971 antes de cerrar la relación."}
+    ]
+  },
+  {
+    id:"production-town",
+    title:"¿Por qué aparece el pueblo?",
+    text:"Ahora conectá infraestructura, producción y asentamiento sin confundirlos.",
+    requires:["intake","parcels","foundation"],
+    nodes:["Bocatoma 1971","Parcelas","Fundación 1973"],
+    options:[
+      {label:"El nuevo sistema productivo necesitó también un espacio de asentamiento y organización.",correct:true,consequence:"Conectaste infraestructura → producción → asentamiento. Es una hipótesis de lectura apoyada por las fuentes."},
+      {label:"La fundación no tiene relación con la transformación territorial.",correct:false,consequence:"La relación no queda demostrada por las huellas disponibles. Volvé a la secuencia y buscá la evidencia."}
+    ]
+  },
+  {
+    id:"town-community",
+    title:"¿Cuándo una transformación se vuelve comunidad?",
+    text:"La última relación exige distinguir fundación, instituciones y vida cotidiana.",
+    requires:["foundation","commission","school"],
+    nodes:["Fundación 1973","Comisión de Fomento","Comunidad"],
+    options:[
+      {label:"La fundación es un momento; la organización y la vida comunitaria son capas posteriores.",correct:true,consequence:"Separaste fundación → organización → comunidad. La distinción queda registrada."},
+      {label:"Fundación, instituciones y comunidad son exactamente el mismo momento.",correct:false,consequence:"La evidencia disponible marca momentos distintos. La pista sigue abierta."}
+    ]
+  }
+];
+
 const LAYERS={territory:"Territorio",water:"Agua",production:"Producción",community:"Comunidad",identity:"Identidad"};
-const state={eventIndex:0,discovered:new Set(),history:[]};
+const state={eventIndex:0,discovered:new Set(),history:[],relations:new Set(),answers:{}};
 const $=selector=>document.querySelector(selector);
 
 function evidenceLabel(type){return ({documented:"DOCUMENTADO",partial:"PARCIAL",reconstruction:"RECONSTRUCCIÓN",interpretation:"INTERPRETACIÓN"})[type]||type.toUpperCase();}
 function currentEvent(){return EVENTS[state.eventIndex];}
+function relationUnlocked(r){return r.requires.every(id=>state.discovered.has(id));}
 
 function render(){
   const event=currentEvent();
@@ -48,10 +90,25 @@ function render(){
   for(const key of ["water","brush","fields","town","roads","barda"]) $("#world").style.setProperty("--"+key,event.values[key]);
   $("#points").innerHTML=event.points.map(point=>`<div class="point ${state.discovered.has(point.id)?"visited":""}" style="left:${point.x}%;top:${point.y}%"><button data-id="${point.id}" aria-label="Descubrir ${point.label}" aria-pressed="${state.discovered.has(point.id)}">+</button><label>${point.label}</label></div>`).join("");
   $("#eventTags").innerHTML=event.tags.map(tag=>`<span>${tag}</span>`).join("");
-  $("#knowledge").textContent=`${state.discovered.size} / ${Object.keys(DISCOVERIES).length} huellas`;
+  $("#knowledge").textContent=`${state.discovered.size} / ${Object.keys(DISCOVERIES).length} huellas · ${state.relations.size} conexiones`;
   $("#discovery").hidden=true;
   $("#prev").disabled=state.eventIndex===0;
   $("#next").disabled=state.eventIndex===EVENTS.length-1;
+  renderRelations();
+}
+
+function renderRelations(){
+  const available=RELATIONS.filter(relationUnlocked);
+  const locked=RELATIONS.filter(r=>!relationUnlocked(r));
+  $("#relations").innerHTML=`
+    <div class="relations-head"><div><p class="kicker">MAPA DE RELACIONES</p><h3>Las huellas empiezan a hablar entre sí.</h3></div><b>${state.relations.size} / ${RELATIONS.length}</b></div>
+    <p class="relations-copy">Una huella aislada informa. Una conexión permite construir una explicación. Las decisiones no cambian la historia documentada: cambian tu recorrido de investigación.</p>
+    <div class="relation-list">
+      ${available.map(r=>`<button class="relation-card ${state.relations.has(r.id)?"solved":""}" data-relation="${r.id}">
+        <span class="relation-nodes">${r.nodes.join(" → ")}</span><strong>${r.title}</strong><small>${state.relations.has(r.id)?"CONEXIÓN REGISTRADA":"INVESTIGAR →"}</small>
+      </button>`).join("")}
+      ${locked.map(r=>`<div class="relation-card locked"><span class="relation-nodes">${r.nodes.join(" → ")}</span><strong>${r.title}</strong><small>FALTAN ${r.requires.filter(id=>!state.discovered.has(id)).length} HUELLAS</small></div>`).join("")}
+    </div>`;
 }
 
 function travel(nextIndex){
@@ -69,8 +126,34 @@ function discover(id){
   state.discovered.add(id);
   const sourceNames=discovery.sources.map(id=>SOURCES[id]?.name).filter(Boolean);
   $("#discovery").innerHTML=`<div class="discovery-head"><div><span class="tag">${evidenceLabel(discovery.type)}</span><h3>${discovery.title}</h3></div><span class="layer">${LAYERS[discovery.layer]||discovery.layer}</span></div><p>${discovery.text}</p><small>Fuentes: ${sourceNames.join(" · ")}</small>`;
+  $("#discovery").hidden=false;
   render();
   $("#discovery").hidden=false;
+  document.querySelector("#discovery").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function openRelation(id){
+  const relation=RELATIONS.find(r=>r.id===id);
+  if(!relation || !relationUnlocked(relation))return;
+  const answered=state.answers[id];
+  $("#decision").innerHTML=`
+    <div class="decision-top"><span class="tag">INVESTIGACIÓN</span><button id="decisionClose">×</button></div>
+    <p class="kicker">CONEXIÓN ${String(RELATIONS.indexOf(relation)+1).padStart(2,"0")}</p>
+    <h3>${relation.title}</h3><p>${relation.text}</p>
+    <div class="evidence-chain">${relation.nodes.map((n,i)=>`<span>${n}</span>${i<relation.nodes.length-1?"<i>→</i>":""}`).join("")}</div>
+    <div class="choices">${relation.options.map((o,i)=>`<button class="choice ${answered!==undefined&&answered===i?(o.correct?"chosen-correct":"chosen-wrong"):""}" data-choice="${i}">${o.label}</button>`).join("")}</div>
+    ${answered!==undefined?`<div class="consequence ${relation.options[answered].correct?"good":"open"}"><b>${relation.options[answered].correct?"CONEXIÓN REGISTRADA":"PISTA ABIERTA"}</b><p>${relation.options[answered].consequence}</p></div>`:""}
+    <small>La decisión organiza tu investigación; no altera los hechos históricos documentados.</small>`;
+  $("#decision").hidden=false;
+  $("#decision").scrollIntoView({behavior:"smooth",block:"nearest"});
+  $("#decisionClose").onclick=()=>$("#decision").hidden=true;
+  document.querySelectorAll("[data-choice]").forEach(btn=>btn.onclick=()=>{
+    const i=Number(btn.dataset.choice);
+    state.answers[id]=i;
+    if(relation.options[i].correct)state.relations.add(id);
+    renderRelations();
+    openRelation(id);
+  });
 }
 
 function openSources(){
@@ -94,5 +177,6 @@ $("#sources").onclick=openSources;
 $("#source2").onclick=openSources;
 $("#close").onclick=()=>$("#modal").close();
 $("#points").onclick=event=>{const button=event.target.closest("button[data-id]");if(button)discover(button.dataset.id);};
-document.addEventListener("keydown",event=>{if($("#journey").hidden)return;if(event.key==="ArrowRight")travel(state.eventIndex+1);if(event.key==="ArrowLeft")travel(state.eventIndex-1);if(event.key==="Escape"&&$("#modal").open)$("#modal").close();});
+$("#relations").onclick=event=>{const card=event.target.closest("[data-relation]");if(card)openRelation(card.dataset.relation);};
+document.addEventListener("keydown",event=>{if($("#journey").hidden)return;if(event.key==="ArrowRight")travel(state.eventIndex+1);if(event.key==="ArrowLeft")travel(state.eventIndex-1);if(event.key==="Escape"){if($("#modal").open)$("#modal").close();if(!$("#decision").hidden)$("#decision").hidden=true;}});
 render();
