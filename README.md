@@ -85,3 +85,25 @@ Una fotografía real debe conservar su procedencia. Una reconstrucción no puede
 - Wikimedia Commons — fotografía del cartel de ingreso, con licencia indicada en su ficha.
 
 La próxima expansión lógica no es llenar tarjetas: es incorporar **fotografías locales verificables, mapas históricos, documentos digitalizados y testimonios reales** y hacer que cada pieza tenga una función dentro de las cadenas de investigación.
+
+
+## V2.4 · Laboratorio de investigación
+Las fuentes dejan de ser únicamente contenido y pasan a ser **objetos jugables**.
+
+El jugador puede:
+1. descubrir una huella;
+2. desbloquear una pieza;
+3. examinar su procedencia;
+4. conectar personas, agua, territorio, parcelas e instituciones;
+5. desbloquear nuevas piezas mediante esas conexiones.
+
+Objetos actuales:
+- archivo de Tratayen;
+- documento sobre riego;
+- mapa/territorio de parcelas;
+- lugar de fundación;
+- Roberto Gasparri;
+- primera escuela;
+- Club Atlético San Patricio.
+
+Regla: una pieza bloqueada no se muestra como conseguida. Las fuentes originales permanecen accesibles.
